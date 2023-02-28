@@ -29,15 +29,16 @@ class Sha256 : private boost::noncopyable {
     void update(ByteView data) noexcept;
     void update(std::string_view data) noexcept;
     Bytes finalize() noexcept;
-    Bytes finalize_nopadding(bool compression) noexcept;
+    Bytes finalize_nopadding(bool compression) const noexcept;
+
+    static constexpr size_t kDigestLength{SHA256_DIGEST_LENGTH};
 
   private:
     std::unique_ptr<SHA256_CTX> ctx_{nullptr};
     static thread_local ObjectPool<SHA256_CTX> ctx_pool_;
-
-    std::array<uint8_t, 64> buffer_{0};  // Accumulation buffer
-    size_t buffer_offset_{0};            // Last populated buffer offset
-    size_t bytes_{0};                    // Total accrued bytes
+    std::array<uint8_t, SHA256_CBLOCK> buffer_;
+    size_t buffer_offset_{0};
+    size_t bytes_{0};
 };
 }  // namespace zen::crypto
 

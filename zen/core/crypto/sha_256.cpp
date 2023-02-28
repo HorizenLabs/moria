@@ -30,49 +30,57 @@ void Sha256::init() noexcept {
         ZEN_ASSERT(ctx_.get() != nullptr);
     }
     SHA256_Init(ctx_.get());
-    buffer_offset_ = 0;
     bytes_ = 0;
+    buffer_offset_ = 0;
 }
 
 void Sha256::update(ByteView data) noexcept {
-    // Consume data in chunks of 64 bytes
-    while (!data.empty()) {
-        const size_t chunk_size{std::min(buffer_.size() - buffer_offset_, data.size())};
-        memcpy(&buffer_[buffer_offset_], data.data(), chunk_size);
-        data.remove_prefix(chunk_size);
-        buffer_offset_ += chunk_size;
-        bytes_ += chunk_size;
+    // If some room left in buffer fill it
+    if (buffer_offset_ != 0) {
+        const size_t room_size{std::min(buffer_.size() - buffer_offset_, data.size())};
+        memcpy(&buffer_[buffer_offset_], data.data(), room_size);
+        data.remove_prefix(room_size);  // Already consumed
+        buffer_offset_ += room_size;
+        bytes_ += room_size;
         if (buffer_offset_ == buffer_.size()) {
-            //SHA256_Update(ctx_.get(), buffer_.data(), buffer_.size());
             SHA256_Transform(ctx_.get(), buffer_.data());
             buffer_offset_ = 0;
         }
     }
 
-    // SHA256_Update(ctx_.get(), data.data(), data.size());
+    // Process remaining data in chunks
+    while (data.size() >= SHA256_CBLOCK) {
+        bytes_ += SHA256_CBLOCK;
+        SHA256_Transform(ctx_.get(), data.data());
+        data.remove_prefix(SHA256_CBLOCK);
+    }
+
+    // Accumulate leftover in buffer
+    if (!data.empty()) {
+        memcpy(&buffer_[0], data.data(), data.size());
+        buffer_offset_ = data.size();
+        bytes_ += data.size();
+    }
 }
 void Sha256::update(std::string_view data) noexcept { update(string_view_to_byte_view(data)); }
+
 Bytes Sha256::finalize() noexcept {
     using namespace boost;
+    static const std::array<uint8_t, SHA256_CBLOCK> pad{0x80};
 
-    static Bytes pad(64, 0x80);
-
-    // Pad to up to buffer size
-    const size_t chunk_size(buffer_.size() - buffer_offset_);
-    endian::store_big_u64(pad.data(), bytes_ << 3);
-    update({&pad[0], chunk_size});
-    return finalize_nopadding(/*compression=*/false);
-
-    //    Bytes ret(SHA256_DIGEST_LENGTH, '\0');
-    //    SHA256_Final(ret.data(), ctx_.get());
-    //    return ret;
+    Bytes sizedesc(8, '\0');
+    endian::store_big_u64(&sizedesc[0], bytes_ << 3);
+    update({&pad[0], 1 + ((119 - (bytes_ % 64)) % 64)});
+    update({&sizedesc[0], sizedesc.size()});
+    return finalize_nopadding(false);
 }
-Bytes Sha256::finalize_nopadding(bool compression) noexcept {
+Bytes Sha256::finalize_nopadding(bool compression) const noexcept {
     using namespace boost;
-    if (compression) ZEN_ASSERT(bytes_ == 64);
+    if (compression) ZEN_ASSERT(bytes_ == SHA256_CBLOCK);
+
     Bytes ret(SHA256_DIGEST_LENGTH, '\0');
     for (int i{0}; i < 8; ++i) {
-        endian::store_big_u32(&ret[i * 4], ctx_->h[i]);
+        endian::store_big_u32(&ret[i << 2], ctx_->h[i]);
     }
     return ret;
 }
