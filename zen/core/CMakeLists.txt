@@ -1,0 +1,32 @@
+#[[
+   Copyright 2022 The Silkworm Authors
+   Copyright 2023 Horizen Labs
+
+   Distributed under the MIT software license, see the accompanying
+   file COPYING or http://www.opensource.org/licenses/mit-license.php.
+]]
+
+message(CHECK_START "Looking for required packages ...")
+find_package(Microsoft.GSL CONFIG REQUIRED)
+find_package(nlohmann_json CONFIG REQUIRED)
+find_package(OpenSSL)
+
+if(MSVC)
+    add_compile_options(/EHsc)
+else()
+    add_compile_options(-fno-exceptions)
+endif()
+
+file(GLOB_RECURSE ZEN_CORE_SRC CONFIGURE_DEPENDS "*.cpp" "*.hpp" "*.c" "*.h")
+list(FILTER ZEN_CORE_SRC EXCLUDE REGEX "_test\\.cpp$")
+
+add_library(zen_core ${ZEN_CORE_SRC} common/capped_set.hpp)
+target_include_directories(zen_core PUBLIC ${CMAKE_SOURCE_DIR})
+target_include_directories(zen_core SYSTEM PUBLIC ${ZEN_MAIN_DIR}/third-party/expected/include)
+
+set_target_properties(zen_core PROPERTIES LINKER_LANGUAGE CXX)
+
+set(ZEN_CORE_PUBLIC_LIBS intx::intx Microsoft.GSL::GSL nlohmann_json OpenSSL::Crypto)
+set(ZEN_CORE_PRIVATE_LIBS "")
+
+target_link_libraries(zen_core PUBLIC ${ZEN_CORE_PUBLIC_LIBS} PRIVATE ${ZEN_CORE_PRIVATE_LIBS})
