@@ -12,7 +12,6 @@
 #include <regex>
 
 #include <boost/algorithm/string.hpp>
-#include <boost/format.hpp>  // TODO(C++20/23) Replace with std::format when compiler supports
 
 namespace zen {
 
@@ -82,7 +81,10 @@ std::string to_string_binary(const size_t input) {
             break;
         }
     }
-    return boost::str(boost::format("%.2f %s") % value % suffix[index]);
+    static constexpr size_t kBufferSize{64};
+    ZEN_THREAD_LOCAL std::string output(kBufferSize, 0);
+    std::snprintf(output.data(), kBufferSize, "%.02lf %s", value, suffix[index]);
+    return {output};
 }
 
 std::string get_random_alpha_string(size_t length) {

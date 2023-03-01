@@ -18,6 +18,12 @@
 
 #include <intx/intx.hpp>
 
+#if defined(__wasm__)
+#define ZEN_THREAD_LOCAL static
+#else
+#define ZEN_THREAD_LOCAL thread_local
+#endif
+
 namespace zen {
 
 template <class T>
