@@ -16,7 +16,7 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     endif()
 
 
-        add_definitions(-D_WIN32_WINNT=0x0A00)  # Min Windows 10
+    add_definitions(-D_WIN32_WINNT=0x0A00)  # Min Windows 10
     add_definitions(-DVC_EXTRALEAN)         # Process windows headers faster ...
     add_definitions(-DWIN32_LEAN_AND_MEAN)  # ... and prevent winsock mismatch with Boost's
     add_definitions(-DNOMINMAX)             # Prevent MSVC to tamper with std::min/std::max
@@ -74,8 +74,8 @@ elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
 
     message(STATUS "${CMAKE_CXX_COMPILER_ID} version ${CMAKE_CXX_COMPILER_VERSION}")
 
-    # Require at least GCC 13
-    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 13.0)
+    # Require at least GCC 11
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 11.0)
         message(FATAL_ERROR "GCC Version must be at least 13")
     endif()
 
