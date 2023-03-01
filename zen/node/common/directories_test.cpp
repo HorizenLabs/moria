@@ -104,4 +104,35 @@ TEST_CASE("Temp Directory", "[misc]") {
         CHECK_FALSE(std::filesystem::exists(tmp_generated_path));
     }
 }
+
+TEST_CASE("Data Directory", "[misc]") {
+    const auto os_storage_path{get_os_default_storage_path()};
+    std::filesystem::path zen_data_dir{};
+    {
+        DataDirectory data_dir{os_storage_path};
+        zen_data_dir = data_dir.path();
+        CHECK_FALSE(std::filesystem::exists(data_dir.path() / "chaindata"));
+        CHECK_FALSE(std::filesystem::exists(data_dir.path() / "etl-tmp"));
+        CHECK_FALSE(std::filesystem::exists(data_dir.path() / "nodes"));
+
+        data_dir.deploy();
+        CHECK(std::filesystem::exists(data_dir.path() / "chaindata"));
+        CHECK(std::filesystem::exists(data_dir.path() / "etl-tmp"));
+        CHECK(std::filesystem::exists(data_dir.path() / "nodes"));
+
+        data_dir.clear(true);
+        CHECK(std::filesystem::exists(data_dir.path() / "chaindata"));
+        CHECK(std::filesystem::exists(data_dir.path() / "etl-tmp"));
+        CHECK(std::filesystem::exists(data_dir.path() / "nodes"));
+    }
+
+    // After destruction the path should be still in place
+    CHECK(std::filesystem::exists(zen_data_dir / "chaindata"));
+    CHECK(std::filesystem::exists(zen_data_dir / "etl-tmp"));
+    CHECK(std::filesystem::exists(zen_data_dir / "nodes"));
+
+    // Clean up
+    std::ignore = std::filesystem::remove_all(zen_data_dir);
+}
+
 }  // namespace zen

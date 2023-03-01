@@ -14,6 +14,8 @@
 #include <stdexcept>
 #include <vector>
 
+#include <boost/noncopyable.hpp>
+
 namespace zen {
 
 //! \brief Returns the path to OS provided temporary storage location
@@ -31,7 +33,7 @@ std::filesystem::path get_process_absolute_full_path();
 std::filesystem::path get_unique_temporary_path(std::optional<std::filesystem::path> base_path = std::nullopt);
 
 //! \brief Directory class acts as a wrapper around common functions and properties of a filesystem directory object
-class Directory {
+class Directory : private boost::noncopyable {
   public:
     //! \brief Creates an instance of a Directory object provided the path
     //! \param [in] path : the path of the directory we're pointing to
@@ -78,10 +80,33 @@ class TempDirectory final : public Directory {
 
     //! \brief Creates an instance of a TempDirectory from a user provided path
     //! \param [in] base_path :  A path where to append this instance of temporary directory. MUST be absolute
-    explicit TempDirectory(const std::filesystem::path path) : Directory(get_unique_temporary_path(path)){};
+    explicit TempDirectory(const std::filesystem::path& path) : Directory(get_unique_temporary_path(path)){};
 
-    ~TempDirectory() final {
-        std::filesystem::remove_all(path());  // Remove self
+    ~TempDirectory() override {
+        std::ignore = std::filesystem::remove_all(path());  // Remove self
+    }
+};
+
+//! \brief DataDirectory wraps the directory tree used by Zen as base storage path.
+//! A typical DataDirectory has the following subdirs
+//! \verbatim
+//! <base_path>
+//! |-- chaindata <-- Where main chain database is stored
+//! |-- etl-tmp   <-- Where temporary files from etl collector are stored
+//! |-- nodes     <-- Where database for discovered nodes is stored
+class DataDirectory final : public Directory {
+  public:
+    using Directory::Directory;
+    ~DataDirectory() override = default;
+
+    //! \brief Override DataDirectory's clear method to avoid accidental loss of data
+    void clear(bool) override {};
+
+    //! \brief Ensures all subdirs are properly created
+    void deploy() {
+        std::ignore = operator[]("chaindata");
+        std::ignore = operator[]("etl-tmp");
+        std::ignore = operator[]("nodes");
     }
 };
 }  // namespace zen

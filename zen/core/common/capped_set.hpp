@@ -59,7 +59,6 @@ class CappedSet {
     }
 
     friend bool operator==(const CappedSet<T>& Lhs_, const CappedSet<T>& Rhs_) { return Lhs_.items_ == Rhs_.items_; }
-    friend bool operator!=(const CappedSet<T>& Lhs_, const CappedSet<T>& Rhs_) { return Lhs_.items_ != Rhs_.items_; }
 
   private:
     size_t capacity_;

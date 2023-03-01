@@ -15,6 +15,8 @@
 #endif
 #include <array>
 
+#include <boost/process/environment.hpp>
+
 #include <zen/core/common/misc.hpp>
 
 namespace zen {
@@ -53,23 +55,25 @@ std::filesystem::path get_unique_temporary_path(std::optional<std::filesystem::p
 }
 std::filesystem::path get_os_default_storage_path() {
     std::string base_path_str{};
-    const char* env{std::getenv("XDG_DATA_HOME")};
-    if (env) {
+    auto environment{boost::this_process::environment()};
+    auto env_value{environment["XDG_DATA_HOME"]};
+
+    if (!env_value.empty()) {
         // Got storage path from docker
-        base_path_str.assign(env);
+        base_path_str.assign(env_value.to_string());
     } else {
 #ifdef _WIN32
         std::string env_name{"APPDATA"};
 #else
         std::string env_name{"HOME"};
 #endif
-        env = std::getenv(env_name.c_str());
-        if (!env) {
+        env_value = environment[env_name];
+        if (env_value.empty()) {
             // We don't actually know where to store data
             // fallback to current directory
             base_path_str.assign(std::filesystem::current_path().string());
         } else {
-            base_path_str.assign(env);
+            base_path_str.assign(env_value.to_string());
         }
     }
 
