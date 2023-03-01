@@ -74,7 +74,9 @@ Bytes Sha512::finalize() noexcept {
     return finalize_nopadding(false);
 }
 Bytes Sha512::finalize_nopadding(bool compression) const noexcept {
-    if (compression) ZEN_ASSERT(bytes_ == SHA512_CBLOCK);
+    if (compression) {
+        ZEN_ASSERT(bytes_ == SHA512_CBLOCK);
+    }
 
     Bytes ret(SHA512_DIGEST_LENGTH, '\0');
     for (int i{0}; i < 8; ++i) {

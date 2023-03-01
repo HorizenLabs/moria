@@ -28,15 +28,15 @@ class Sha256 : private boost::noncopyable {
     void init() noexcept;
     void update(ByteView data) noexcept;
     void update(std::string_view data) noexcept;
-    Bytes finalize() noexcept;
-    Bytes finalize_nopadding(bool compression) const noexcept;
+    [[nodiscard]] Bytes finalize() noexcept;
+    [[nodiscard]] Bytes finalize_nopadding(bool compression) const noexcept;
 
     static constexpr size_t kDigestLength{SHA256_DIGEST_LENGTH};
 
   private:
     std::unique_ptr<SHA256_CTX> ctx_{nullptr};
     static thread_local ObjectPool<SHA256_CTX> ctx_pool_;
-    std::array<uint8_t, SHA256_CBLOCK> buffer_;
+    std::array<uint8_t, SHA256_CBLOCK> buffer_{0x0};
     size_t buffer_offset_{0};
     size_t bytes_{0};
 };

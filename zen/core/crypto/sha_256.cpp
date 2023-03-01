@@ -74,7 +74,9 @@ Bytes Sha256::finalize() noexcept {
     return finalize_nopadding(false);
 }
 Bytes Sha256::finalize_nopadding(bool compression) const noexcept {
-    if (compression) ZEN_ASSERT(bytes_ == SHA256_CBLOCK);
+    if (compression) {
+        ZEN_ASSERT(bytes_ == SHA256_CBLOCK);
+    }
 
     Bytes ret(SHA256_DIGEST_LENGTH, '\0');
     for (int i{0}; i < 8; ++i) {

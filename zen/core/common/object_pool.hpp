@@ -36,7 +36,7 @@ class ObjectPool : private boost::noncopyable {
         pool_.push({t, TDtor()});
     }
 
-    gsl::owner<T*> acquire() {
+    gsl::owner<T*> acquire() noexcept {
         ZEN_DETAIL_OBJECT_POOL_GUARD
         if (pool_.empty()) {
             return nullptr;
@@ -46,12 +46,12 @@ class ObjectPool : private boost::noncopyable {
         return ret;
     }
 
-    [[nodiscard]] bool empty() const {
+    [[nodiscard]] bool empty() const noexcept {
         ZEN_DETAIL_OBJECT_POOL_GUARD
         return pool_.empty();
     }
 
-    [[nodiscard]] size_t size() const {
+    [[nodiscard]] size_t size() const noexcept {
         ZEN_DETAIL_OBJECT_POOL_GUARD
         return pool_.size();
     }
