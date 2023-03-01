@@ -83,7 +83,7 @@ size_t get_system_page_size() {
 #elif defined(PAGESIZE)  // defined in limits.h
     ret = PAGESIZE;
 #else                    // assume POSIX OS
-    ret = sysconf(_SC_PAGESIZE);
+    ret = static_cast<size_t>(sysconf(_SC_PAGESIZE));
 #endif
     return ret;
 }
@@ -92,7 +92,7 @@ void memory_cleanse(void* ptr, size_t size) {
 #if defined(WIN32)
     SecureZeroMemory(ptr, size);
 #else
-    std::memset(ptr, sttic_cast<int>('\0'), size);
+    std::memset(ptr, static_cast<int>('\0'), size);
 #endif
 }
 
