@@ -10,7 +10,6 @@
 #define ZEN_NODE_CONCURRENCY_OSSIGNALS_HPP_
 
 #include <atomic>
-#include <format>
 #include <functional>
 #include <string>
 

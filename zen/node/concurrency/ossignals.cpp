@@ -10,8 +10,9 @@
 #include <csignal>
 #include <cstdlib>
 #include <iostream>
-#include <stdexcept>
 #include <utility>
+
+#include <boost/format.hpp>  // TODO(C++20/23) Replace with std::format when compiler supports
 
 namespace zen {
 
@@ -107,14 +108,14 @@ void Ossignals::init(std::function<void(int)> custom_handler) {
 void Ossignals::handle(int sig_code) {
     if (bool expected{false}; signalled_.compare_exchange_strong(expected, true)) {
         sig_code_ = sig_code;
-        std::cerr << std::format("Caught OS signal {}, shutting down ...", sig_name(sig_code)) << std::endl;
+        std::cerr << boost::format("Caught OS signal %s, shutting down ...") % sig_name(sig_code) << std::endl;
     }
     const uint32_t sig_count = ++sig_count_;
     if (sig_count >= 10) {
         std::abort();
     }
     if (sig_count > 1) {
-        std::cerr << std::format("Already shutting down. Interrupt other {} times to panic.", (10 - sig_count))
+        std::cerr << boost::format("Already shutting down. Interrupt other %u times to panic.") % (10 - sig_count)
                   << std::endl;
     }
 
@@ -136,6 +137,6 @@ void Ossignals::throw_if_signalled() {
 }
 
 os_signal_exception::os_signal_exception(int code)
-    : sig_code_{code}, message_{std::format("Caught OS signal {}", sig_name(sig_code_))} {}
+    : sig_code_{code}, message_{boost::str(boost::format("Caught OS signal %s") % sig_name(sig_code_))} {}
 const char* os_signal_exception::what() const noexcept { return message_.c_str(); }
 }  // namespace zen

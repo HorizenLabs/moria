@@ -7,11 +7,13 @@
 
 #include "misc.hpp"
 
-#include <format>
+#include <array>
 #include <random>
 #include <regex>
 
 #include <boost/algorithm/string.hpp>
+#include <boost/format.hpp>  // TODO(C++20/23) Replace with std::format when compiler supports
+
 namespace zen {
 
 std::string abridge(std::string_view input, size_t length) {
@@ -70,7 +72,7 @@ tl::expected<uint64_t, std::string> parse_binary_size(const std::string& input) 
 }
 
 std::string to_string_binary(const size_t input) {
-    static const char* suffix[]{"B", "KB", "MB", "GB", "TB"};
+    static const std::array<const char*, 5> suffix{"B", "KB", "MB", "GB", "TB"};
     static const uint32_t items{sizeof(suffix) / sizeof(suffix[0])};
     uint32_t index{0};
     double value{static_cast<double>(input)};
@@ -80,7 +82,7 @@ std::string to_string_binary(const size_t input) {
             break;
         }
     }
-    return std::format("{:.2f} {}", value, suffix[index]);
+    return boost::str(boost::format("%.2f %s") % value % suffix[index]);
 }
 
 std::string get_random_alpha_string(size_t length) {
