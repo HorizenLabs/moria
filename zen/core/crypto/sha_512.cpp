@@ -5,7 +5,7 @@
    file COPYING or http://www.opensource.org/licenses/mit-license.php.
 */
 
-#include "sha_256.hpp"
+#include "sha_512.hpp"
 
 #include <zen/core/common/assert.hpp>
 #include <zen/core/common/cast.hpp>
@@ -13,27 +13,27 @@
 
 namespace zen::crypto {
 
-thread_local ObjectPool<SHA256_CTX> Sha256::ctx_pool_{};
+thread_local ObjectPool<SHA512_CTX> Sha512::ctx_pool_{};
 
-Sha256::Sha256() { init(); }
+Sha512::Sha512() { init(); }
 
-Sha256::~Sha256() {
+Sha512::~Sha512() {
     if (ctx_) {
         ctx_pool_.add(ctx_.release());
     }
 }
-void Sha256::init() noexcept {
+void Sha512::init() noexcept {
     if (!ctx_) {
         ctx_.reset(ctx_pool_.acquire());
-        if (!ctx_) ctx_ = std::make_unique<SHA256_CTX>();
+        if (!ctx_) ctx_ = std::make_unique<SHA512_CTX>();
         ZEN_ASSERT(ctx_.get() != nullptr);
     }
-    SHA256_Init(ctx_.get());
+    SHA512_Init(ctx_.get());
     bytes_ = 0;
     buffer_offset_ = 0;
 }
 
-void Sha256::update(ByteView data) noexcept {
+void Sha512::update(ByteView data) noexcept {
     // If some room left in buffer fill it
     if (buffer_offset_ != 0) {
         const size_t room_size{std::min(buffer_.size() - buffer_offset_, data.size())};
@@ -42,16 +42,16 @@ void Sha256::update(ByteView data) noexcept {
         buffer_offset_ += room_size;
         bytes_ += room_size;
         if (buffer_offset_ == buffer_.size()) {
-            SHA256_Transform(ctx_.get(), buffer_.data());
+            SHA512_Transform(ctx_.get(), buffer_.data());
             buffer_offset_ = 0;
         }
     }
 
     // Process remaining data in chunks
-    while (data.size() >= SHA256_CBLOCK) {
-        bytes_ += SHA256_CBLOCK;
-        SHA256_Transform(ctx_.get(), data.data());
-        data.remove_prefix(SHA256_CBLOCK);
+    while (data.size() >= SHA512_CBLOCK) {
+        bytes_ += SHA512_CBLOCK;
+        SHA512_Transform(ctx_.get(), data.data());
+        data.remove_prefix(SHA512_CBLOCK);
     }
 
     // Accumulate leftover in buffer
@@ -62,23 +62,23 @@ void Sha256::update(ByteView data) noexcept {
     }
 }
 
-void Sha256::update(std::string_view data) noexcept { update(string_view_to_byte_view(data)); }
+void Sha512::update(std::string_view data) noexcept { update(string_view_to_byte_view(data)); }
 
-Bytes Sha256::finalize() noexcept {
-    static const std::array<uint8_t, SHA256_CBLOCK> pad{0x80};
+Bytes Sha512::finalize() noexcept {
+    static const std::array<uint8_t, SHA512_CBLOCK> pad{0x80};
 
-    Bytes sizedesc(8, '\0');
-    endian::store_big_u64(&sizedesc[0], bytes_ << 3);
-    update({&pad[0], 1 + ((119 - (bytes_ % SHA256_CBLOCK)) % SHA256_CBLOCK)});
+    Bytes sizedesc(16, '\0');
+    endian::store_big_u64(&sizedesc[8], bytes_ << 3);
+    update({&pad[0], 1 + ((239 - (bytes_ % SHA512_CBLOCK)) % SHA512_CBLOCK)});
     update({&sizedesc[0], sizedesc.size()});
     return finalize_nopadding(false);
 }
-Bytes Sha256::finalize_nopadding(bool compression) const noexcept {
-    if (compression) ZEN_ASSERT(bytes_ == SHA256_CBLOCK);
+Bytes Sha512::finalize_nopadding(bool compression) const noexcept {
+    if (compression) ZEN_ASSERT(bytes_ == SHA512_CBLOCK);
 
-    Bytes ret(SHA256_DIGEST_LENGTH, '\0');
+    Bytes ret(SHA512_DIGEST_LENGTH, '\0');
     for (int i{0}; i < 8; ++i) {
-        endian::store_big_u32(&ret[i << 2], ctx_->h[i]);
+        endian::store_big_u64(&ret[i << 3], ctx_->h[i]);
     }
     return ret;
 }
