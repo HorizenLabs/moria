@@ -63,7 +63,7 @@ class CappedSet {
   private:
     size_t capacity_;
     std::unordered_set<T> items_{};
-    std::queue<typename iterator_t> items_queue_;
+    std::queue<iterator_t> items_queue_;
 };
 
 }  // namespace zen

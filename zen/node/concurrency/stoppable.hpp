@@ -24,6 +24,7 @@ class Stoppable {
     //! \remarks It returns true also in case an OS signal has been trapped
     [[nodiscard]] virtual bool is_stopping() const noexcept;
 
+    virtual ~Stoppable() = default;
   private:
     std::atomic_bool stop_requested_{false};  // Whether a stop request has been issued
 };
