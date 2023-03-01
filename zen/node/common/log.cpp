@@ -15,6 +15,7 @@
 #include <thread>
 
 #include <absl/time/clock.h>
+#include <boost/format.hpp>
 
 namespace zen::log {
 static Settings settings_{};
@@ -107,7 +108,7 @@ BufferBase::BufferBase(Level level) : should_print_(level <= settings_.log_verbo
 
 BufferBase::BufferBase(Level level, std::string_view msg, const std::vector<std::string>& args) : BufferBase(level) {
     if (!should_print_) return;
-    ss_ << std::format("{: <35s}", msg);
+    ss_ << boost::format("%-35s") % msg;
     bool left{true};
     for (const auto& arg : args) {
         ss_ << (left ? kColorGreen : kColorWhiteHigh) << arg << kColorReset << (left ? "=" : " ") << kColorReset;
