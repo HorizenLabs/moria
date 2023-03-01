@@ -31,7 +31,7 @@ std::filesystem::path get_process_absolute_full_path() {
 #else
     std::array<char, FILENAME_MAX> path{0};
     ssize_t count = readlink("/proc/self/exe", path.data(), FILENAME_MAX);
-    return std::filesystem::path(std::string(path.data(), (count > 0U) ? count : 0U));
+    return std::filesystem::path(std::string(path.data(), (count > 0U) ? static_cast<size_t>(count) : 0U));
 #endif
 }
 std::filesystem::path get_unique_temporary_path(std::optional<std::filesystem::path> base_path) {
