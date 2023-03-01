@@ -5,6 +5,8 @@
    file COPYING or http://www.opensource.org/licenses/mit-license.php.
 */
 
+#include <thread>
+
 #include <catch2/catch.hpp>
 
 #include <zen/node/common/stopwatch.hpp>

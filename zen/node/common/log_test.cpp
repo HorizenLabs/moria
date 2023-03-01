@@ -8,6 +8,7 @@
 #include "log_test.hpp"
 
 #include <iostream>
+#include <thread>
 
 #include <catch2/catch.hpp>
 
