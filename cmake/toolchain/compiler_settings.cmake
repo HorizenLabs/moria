@@ -10,8 +10,13 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 
     message(STATUS "MSVC_VERSION = ${MSVC_VERSION}")
     message(STATUS "MSVC_CXX_ARCHITECTURE_ID = ${MSVC_CXX_ARCHITECTURE_ID}")
+    if(MSVC_VERSION LESS_EQUAL 1928)
+        message(FATAL_ERROR "Your MSVC version is too low."
+                "Please update your Visual Studio to at least release 2019 16.9.2")
+    endif()
 
-    add_definitions(-D_WIN32_WINNT=0x0A00)  # Min Windows 10
+
+        add_definitions(-D_WIN32_WINNT=0x0A00)  # Min Windows 10
     add_definitions(-DVC_EXTRALEAN)         # Process windows headers faster ...
     add_definitions(-DWIN32_LEAN_AND_MEAN)  # ... and prevent winsock mismatch with Boost's
     add_definitions(-DNOMINMAX)             # Prevent MSVC to tamper with std::min/std::max
@@ -67,6 +72,11 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 
 elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
 
+    # Require at least GCC 13
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 13.0)
+        message(FATAL_ERROR "GCC Version must be at least 13")
+    endif()
+
     if(ZEN_SANITIZE)
         add_compile_options(-fno-omit-frame-pointer -fsanitize=${ZEN_SANITIZE} -DZEN_SANITIZE)
         add_link_options(-fno-omit-frame-pointer -fsanitize=${ZEN_SANITIZE} -DZEN_SANITIZE)
@@ -77,6 +87,11 @@ elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
     endif()
 
 elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES ".*Clang$")
+
+    # Require at least Clang 13
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 13.0)
+        message(FATAL_ERROR "Clang Version must be at least 13")
+    endif()
 
     if(ZEN_CLANG_COVERAGE)
         add_compile_options(-fprofile-instr-generate -fcoverage-mapping)
