@@ -97,7 +97,7 @@ endif(NOT ZEN_CORE_ONLY)
 # Compiler enforcements on Zen
 if(NOT MSVC)
 
-    add_compile_options(-Werror -Wall -Wextra -Wreturn-stack-address -pedantic)
+    add_compile_options(-Werror -Wall -Wextra -pedantic)
     add_compile_options(-Wshadow -Wimplicit-fallthrough -Wsign-conversion)
     add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Wold-style-cast>)
     add_compile_options(-Wno-missing-field-initializers -Wnon-virtual-dtor)
