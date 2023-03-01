@@ -79,7 +79,7 @@ Bytes Sha256::finalize_nopadding(bool compression) const noexcept {
     }
 
     Bytes ret(SHA256_DIGEST_LENGTH, '\0');
-    for (int i{0}; i < 8; ++i) {
+    for (size_t i{0}; i < 8; ++i) {
         endian::store_big_u32(&ret[i << 2], ctx_->h[i]);
     }
     return ret;

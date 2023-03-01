@@ -79,7 +79,7 @@ Bytes Sha512::finalize_nopadding(bool compression) const noexcept {
     }
 
     Bytes ret(SHA512_DIGEST_LENGTH, '\0');
-    for (int i{0}; i < 8; ++i) {
+    for (size_t i{0}; i < 8; ++i) {
         endian::store_big_u64(&ret[i << 3], ctx_->h[i]);
     }
     return ret;
