@@ -87,7 +87,7 @@ class Worker : public Stoppable, private boost::noncopyable {
   private:
     std::atomic_uint64_t id_{0};  // Obtained from thread_id
     std::atomic<State> state_{State::kStopped};
-    std::unique_ptr<std::jthread> thread_{nullptr};
+    std::unique_ptr<std::thread> thread_{nullptr};
     std::condition_variable thread_started_cv_{};
     std::exception_ptr exception_ptr_{nullptr};
     virtual void work() = 0;  // Derived classes must override

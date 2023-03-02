@@ -23,7 +23,7 @@ void Worker::start(bool kicked, bool wait) noexcept {
     kicked_.store(kicked);
     id_.store(0);
 
-    thread_ = std::make_unique<std::jthread>([&]() {
+    thread_ = std::make_unique<std::thread>([&]() {
         log::set_thread_name(name_.c_str());
 
         // Retrieve the id
@@ -31,7 +31,8 @@ void Worker::start(bool kicked, bool wait) noexcept {
         ss << std::this_thread::get_id();
         id_.store(std::stoull(ss.str()));
 
-        if (State expected_starting{State::kStarting}; state_.compare_exchange_strong(expected_starting, State::kStarted)) {
+        if (State expected_starting{State::kStarting};
+            state_.compare_exchange_strong(expected_starting, State::kStarted)) {
             thread_started_cv_.notify_one();
             signal_worker_state_changed(this);
             try {
@@ -77,8 +78,8 @@ bool Worker::wait_for_kick(uint32_t timeout_milliseconds) {
         // 2) We change the state in kKickWaiting and begin to wait
         if (is_stopping()) break;
 
-        State expected_state{State::kStarted};
-        if (state_.compare_exchange_strong(expected_state, State::kKickWaiting)) {
+        if (State expected_state{State::kStarted};
+            state_.compare_exchange_strong(expected_state, State::kKickWaiting)) {
             signal_worker_state_changed(this);
         }
         if (timeout_milliseconds > 0) {
