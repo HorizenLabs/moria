@@ -6,9 +6,6 @@
 */
 
 #pragma once
-#ifndef ZEN_CORE_COMMON_CAST_HPP_
-#define ZEN_CORE_COMMON_CAST_HPP_
-
 #include <cstring>
 
 #include "base.hpp"
@@ -32,5 +29,3 @@ inline ByteView string_view_to_byte_view(std::string_view v) { return {byte_ptr_
 inline std::string_view byte_view_to_string_view(ByteView v) { return {byte_ptr_cast(v.data()), v.length()}; }
 
 }  // namespace zen
-
-#endif  // ZEN_CORE_COMMON_CAST_HPP_

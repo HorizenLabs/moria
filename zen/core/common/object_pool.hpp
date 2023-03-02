@@ -6,9 +6,6 @@
 */
 
 #pragma once
-#ifndef ZEN_CORE_COMMON_OBJECT_POOL_HPP_
-#define ZEN_CORE_COMMON_OBJECT_POOL_HPP_
-
 #include <memory>
 #include <mutex>
 #include <stack>
@@ -64,5 +61,3 @@ class ObjectPool : private boost::noncopyable {
 };
 
 }  // namespace zen
-#undef ZEN_DETAIL_OBJECT_POOL_GUARD  // Stop polluting preprocessor
-#endif                               // ZEN_CORE_COMMON_OBJECT_POOL_HPP_

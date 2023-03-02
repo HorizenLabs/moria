@@ -6,8 +6,6 @@
 */
 
 #pragma once
-#ifndef ZEN_CORE_ENCODING_HEX_HPP_
-#define ZEN_CORE_ENCODING_HEX_HPP_
 
 #include <string_view>
 
@@ -53,4 +51,3 @@ tl::expected<Bytes, DecodingError> from_hex(std::string_view source) noexcept;
 //! \brief Returns the integer value corresponding to the ascii hex digit provided
 tl::expected<unsigned, DecodingError> decode_hex_digit(char input) noexcept;
 }  // namespace zen
-#endif  // ZEN_CORE_ENCODING_HEX_HPP_

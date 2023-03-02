@@ -6,9 +6,6 @@
 */
 
 #pragma once
-#ifndef ZEN_CORE_CRYPTO_SHA_256_HPP_
-#define ZEN_CORE_CRYPTO_SHA_256_HPP_
-
 #include <array>
 #include <cstdint>
 
@@ -41,5 +38,3 @@ class Sha256 : private boost::noncopyable {
     size_t bytes_{0};
 };
 }  // namespace zen::crypto
-
-#endif  // ZEN_CORE_CRYPTO_SHA_256_HPP_

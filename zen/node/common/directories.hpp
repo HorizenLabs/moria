@@ -6,9 +6,6 @@
 */
 
 #pragma once
-#ifndef ZEN_NODE_COMMON_DIRECTORIES_HPP_
-#define ZEN_NODE_COMMON_DIRECTORIES_HPP_
-
 #include <filesystem>
 #include <optional>
 #include <stdexcept>
@@ -100,7 +97,7 @@ class DataDirectory final : public Directory {
     ~DataDirectory() override = default;
 
     //! \brief Override DataDirectory's clear method to avoid accidental loss of data
-    void clear(bool) override {};
+    void clear(bool) override{};
 
     //! \brief Ensures all subdirs are properly created
     void deploy() {
@@ -110,4 +107,3 @@ class DataDirectory final : public Directory {
     }
 };
 }  // namespace zen
-#endif  // ZEN_NODE_COMMON_DIRECTORIES_HPP_

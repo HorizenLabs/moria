@@ -6,9 +6,6 @@
 */
 
 #pragma once
-#ifndef ZEN_NODE_CONCURRENCY_STOPPABLE_HPP_
-#define ZEN_NODE_CONCURRENCY_STOPPABLE_HPP_
-
 #include <atomic>
 
 namespace zen {
@@ -30,5 +27,3 @@ class Stoppable {
 };
 
 }  // namespace zen
-
-#endif  // ZEN_NODE_CONCURRENCY_STOPPABLE_HPP_

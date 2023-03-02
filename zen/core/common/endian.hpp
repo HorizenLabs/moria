@@ -6,10 +6,7 @@
 */
 
 #pragma once
-#ifndef ZEN_CORE_COMMON_ENDIAN_HPP_
-#define ZEN_CORE_COMMON_ENDIAN_HPP_
-
-#include "base.hpp"
+#include <zen/core/common/base.hpp>
 
 namespace zen::endian {
 
@@ -41,4 +38,3 @@ const auto store_big_u32 = intx::be::unsafe::store<uint32_t>;
 const auto store_big_u64 = intx::be::unsafe::store<uint64_t>;
 
 }  // namespace zen::endian
-#endif  // ZEN_CORE_COMMON_ENDIAN_HPP_

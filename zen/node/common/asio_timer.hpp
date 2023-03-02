@@ -6,8 +6,6 @@
 */
 
 #pragma once
-#ifndef ZEN_NODE_COMMON_ASIO_TIMER_HPP_
-#define ZEN_NODE_COMMON_ASIO_TIMER_HPP_
 
 #include <atomic>
 #include <chrono>
@@ -84,4 +82,3 @@ class Timer {
     std::function<bool()> call_back_;
 };
 }  // namespace zen
-#endif  // ZEN_NODE_COMMON_ASIO_TIMER_HPP_

@@ -6,10 +6,8 @@
 */
 
 #pragma once
-#ifndef ZEN_CORE_COMMON_MISC_HPP_
-#define ZEN_CORE_COMMON_MISC_HPP_
+#include <zen/core/common/base.hpp>
 
-#include "base.hpp"
 #include "tl/expected.hpp"
 
 namespace zen {
@@ -29,4 +27,3 @@ std::string to_string_binary(size_t input);
 std::string get_random_alpha_string(size_t length);
 
 }  // namespace zen
-#endif  // ZEN_CORE_COMMON_MISC_HPP_

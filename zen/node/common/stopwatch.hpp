@@ -6,9 +6,6 @@
 */
 
 #pragma once
-#ifndef ZEN_NODE_COMMON_STOPWATCH_HPP_
-#define ZEN_NODE_COMMON_STOPWATCH_HPP_
-
 #include <chrono>
 #include <iomanip>
 #include <iostream>
@@ -74,4 +71,3 @@ class StopWatch {
     std::vector<std::pair<TimePoint, Duration>> laps_{};
 };
 }  // namespace zen
-#endif  // ZEN_NODE_COMMON_STOPWATCH_HPP_

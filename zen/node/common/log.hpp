@@ -6,9 +6,6 @@
 */
 
 #pragma once
-#ifndef ZEN_NODE_COMMON_LOG_HPP_
-#define ZEN_NODE_COMMON_LOG_HPP_
-
 #include <filesystem>
 #include <sstream>
 #include <vector>
@@ -122,5 +119,3 @@ using Message = LogBuffer<Level::kNone>;
 #define ZEN_ERROR ZEN_LOGBUFFER(zen::log::Level::kError)
 #define ZEN_CRITICAL ZEN_LOGBUFFER(zen::log::Level::kCritical)
 #define ZEN_LOG ZEN_LOGBUFFER(zen::log::Level::kNone)
-
-#endif  // ZEN_NODE_COMMON_LOG_HPP_

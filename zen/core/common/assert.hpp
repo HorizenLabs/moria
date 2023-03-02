@@ -6,9 +6,6 @@
 */
 
 #pragma once
-#ifndef ZEN_CORE_COMMON_ASSERT_HPP_
-#define ZEN_CORE_COMMON_ASSERT_HPP_
-
 #include <source_location>
 #include <string_view>
 
@@ -23,5 +20,3 @@ void abort_due_to_assertion_failure(std::string_view message,
         static_cast<void>(0); \
     else                      \
         ::zen::abort_due_to_assertion_failure(#expr, std::source_location::current())
-
-#endif  // ZEN_CORE_COMMON_ASSERT_HPP_

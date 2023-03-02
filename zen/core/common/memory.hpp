@@ -8,9 +8,6 @@
 */
 
 #pragma once
-#ifndef ZEN_CORE_COMMON_MEMORY_HPP_
-#define ZEN_CORE_COMMON_MEMORY_HPP_
-
 #include <cstdint>
 #include <map>
 #include <mutex>
@@ -189,4 +186,3 @@ bool unlock_object_memory(const T& t) {
     return LockedPagesManager::instance().unlock_range(ptr, sizeof(t));
 }
 }  // namespace zen
-#endif  // ZEN_CORE_COMMON_MEMORY_HPP_

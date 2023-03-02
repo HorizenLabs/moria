@@ -6,9 +6,6 @@
 */
 
 #pragma once
-#ifndef ZEN_NODE_CONCURRENCY_WORKER_HPP_
-#define ZEN_NODE_CONCURRENCY_WORKER_HPP_
-
 #include <atomic>
 #include <condition_variable>
 #include <thread>
@@ -95,5 +92,3 @@ class Worker : public Stoppable, private boost::noncopyable {
 };
 
 }  // namespace zen
-
-#endif  // ZEN_NODE_CONCURRENCY_WORKER_HPP_

@@ -6,9 +6,6 @@
 */
 
 #pragma once
-#ifndef ZEN_NODE_COMMON_TERMINAL_HPP_
-#define ZEN_NODE_COMMON_TERMINAL_HPP_
-
 namespace zen {
 
 // Reset sequence
@@ -83,5 +80,3 @@ inline constexpr const char* kColorTealUnderline = "\x1b[4;36m";    // Cyan
 void init_terminal();
 
 }  // namespace zen
-
-#endif  // ZEN_NODE_COMMON_TERMINAL_HPP_

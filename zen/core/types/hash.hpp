@@ -5,9 +5,6 @@
 */
 
 #pragma once
-#ifndef ZEN_CORE_TYPES_HASH_HPP_
-#define ZEN_CORE_TYPES_HASH_HPP_
-
 #include <array>
 #include <ranges>
 
@@ -49,5 +46,3 @@ class Hash {
     std::array<uint8_t, kHashLength> bytes_{0};
 };
 }  // namespace zen
-
-#endif  // ZEN_CORE_TYPES_HASH_HPP_

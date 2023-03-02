@@ -6,9 +6,6 @@
 */
 
 #pragma once
-#ifndef ZEN_NODE_CONCURRENCY_OSSIGNALS_HPP_
-#define ZEN_NODE_CONCURRENCY_OSSIGNALS_HPP_
-
 #include <atomic>
 #include <functional>
 #include <string>
@@ -44,5 +41,3 @@ class Ossignals {
 };
 
 }  // namespace zen
-
-#endif  // ZEN_NODE_CONCURRENCY_OSSIGNALS_HPP_

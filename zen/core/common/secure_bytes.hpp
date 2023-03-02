@@ -7,8 +7,6 @@
 */
 
 #pragma once
-#ifndef ZEN_CORE_COMMON_SECURE_BYTES_HPP_
-#define ZEN_CORE_COMMON_SECURE_BYTES_HPP_
 
 #include <string>
 
@@ -51,4 +49,3 @@ struct secure_allocator : public std::allocator<T>, private boost::noncopyable {
 using SecureBytes = std::basic_string<uint8_t, std::char_traits<uint8_t>, secure_allocator<uint8_t>>;
 
 }  // namespace zen
-#endif  // ZEN_CORE_COMMON_SECURE_BYTES_HPP_

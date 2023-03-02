@@ -6,9 +6,6 @@
 */
 
 #pragma once
-#ifndef ZEN_NODE_DATABASE_MDBX_HPP_
-#define ZEN_NODE_DATABASE_MDBX_HPP_
-
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wimplicit-fallthrough"
 #pragma GCC diagnostic ignored "-Wold-style-cast"
@@ -287,5 +284,3 @@ size_t cursor_erase(::mdbx::cursor& cursor, ByteView set_key,
 size_t cursor_erase_prefix(::mdbx::cursor& cursor, ByteView prefix);
 
 }  // namespace zen::db
-
-#endif  // ZEN_NODE_DATABASE_MDBX_HPP_

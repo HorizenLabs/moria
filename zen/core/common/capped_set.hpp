@@ -5,9 +5,6 @@
 */
 
 #pragma once
-#ifndef ZEN_CORE_COMMON_MR_SET_HPP_
-#define ZEN_CORE_COMMON_MR_SET_HPP_
-
 #include <queue>
 #include <unordered_set>
 
@@ -67,5 +64,3 @@ class CappedSet {
 };
 
 }  // namespace zen
-
-#endif  // ZEN_CORE_COMMON_MR_SET_HPP_
