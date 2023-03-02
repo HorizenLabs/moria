@@ -23,7 +23,7 @@ static std::mutex out_mtx{};
 static std::unique_ptr<std::fstream> file_{nullptr};
 thread_local std::string thread_name_{};
 
-void init(Settings& settings) {
+void init(const Settings& settings) {
     settings_ = settings;
     if (!settings_.log_file.empty()) {
         tee_file(std::filesystem::path(settings.log_file));
@@ -46,6 +46,12 @@ void set_verbosity(Level level) { settings_.log_verbosity = level; }
 bool test_verbosity(Level level) { return level <= settings_.log_verbosity; }
 
 void set_thread_name(const char* name) { thread_name_ = std::string(name); }
+
+uint64_t get_thread_id() {
+    std::stringstream ss;
+    ss << std::this_thread::get_id();
+    return std::stoull(ss.str());
+}
 
 std::string get_thread_name() {
     if (thread_name_.empty()) {

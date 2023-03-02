@@ -41,7 +41,7 @@ struct Settings {
 
 //! \brief Initializes logging facilities
 //! \note This function is not thread safe as it's meant to be used at start of process and never called again
-void init(Settings& settings);
+void init(const Settings& settings);
 
 //! \brief Get the current logging verbosity
 //! \note This function is not thread safe as it's meant to be used in tests
@@ -53,6 +53,9 @@ void set_verbosity(Level level);
 
 //! \brief Sets the name for this thread when logging traces also threads
 void set_thread_name(const char* name);
+
+//! \brief Returns the id of current thread in a printable form
+uint64_t get_thread_id();
 
 //! \brief Returns the currently set name for the thread or the thread id
 std::string get_thread_name();

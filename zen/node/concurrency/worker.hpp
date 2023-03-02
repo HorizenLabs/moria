@@ -11,6 +11,7 @@
 
 #include <atomic>
 #include <condition_variable>
+#include <thread>
 
 #include <boost/noncopyable.hpp>
 #include <boost/signals2/signal.hpp>

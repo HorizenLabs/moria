@@ -27,9 +27,7 @@ void Worker::start(bool kicked, bool wait) noexcept {
         log::set_thread_name(name_.c_str());
 
         // Retrieve the id
-        std::stringstream ss;
-        ss << std::this_thread::get_id();
-        id_.store(std::stoull(ss.str()));
+        id_.store(log::get_thread_id());
 
         if (State expected_starting{State::kStarting};
             state_.compare_exchange_strong(expected_starting, State::kStarted)) {
