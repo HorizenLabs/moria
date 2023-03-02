@@ -7,9 +7,10 @@
 
 #include "misc.hpp"
 
-#include <array>
+#include <iomanip>
 #include <random>
 #include <regex>
+#include <sstream>
 
 #include <boost/algorithm/string.hpp>
 
@@ -71,7 +72,7 @@ tl::expected<uint64_t, std::string> parse_binary_size(const std::string& input) 
 }
 
 std::string to_string_binary(const size_t input) {
-    static const std::array<const char*, 5> suffix{"B", "KB", "MB", "GB", "TB"};
+    static const char* suffix[]{"B", "KB", "MB", "GB", "TB"};
     static const uint32_t items{sizeof(suffix) / sizeof(suffix[0])};
     uint32_t index{0};
     double value{static_cast<double>(input)};
@@ -81,10 +82,11 @@ std::string to_string_binary(const size_t input) {
             break;
         }
     }
-    static constexpr size_t kBufferSize{64};
-    ZEN_THREAD_LOCAL std::string output(kBufferSize, 0);
-    std::snprintf(output.data(), kBufferSize, "%.02lf %s", value, suffix[index]);
-    return {output};
+
+    // TODO(C++20/23) Replace with std::format when widely available on GCC and Clang
+    std::stringstream ss;
+    ss << std::fixed << std::setprecision(index ? 2 : 0) << value << " " << suffix[index];
+    return ss.str();
 }
 
 std::string get_random_alpha_string(size_t length) {
