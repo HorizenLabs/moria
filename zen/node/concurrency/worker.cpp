@@ -14,8 +14,7 @@ namespace zen {
 Worker::~Worker() { stop(/*wait=*/true); }
 
 void Worker::start(bool kicked, bool wait) noexcept {
-    State expected_state{State::kStopped};
-    if (!state_.compare_exchange_strong(expected_state, State::kStarting)) {
+    if (State expected_state{State::kStopped}; !state_.compare_exchange_strong(expected_state, State::kStarting)) {
         return;
     }
     signal_worker_state_changed(this);
@@ -24,7 +23,7 @@ void Worker::start(bool kicked, bool wait) noexcept {
     kicked_.store(kicked);
     id_.store(0);
 
-    thread_ = std::make_unique<std::thread>([&]() {
+    thread_ = std::make_unique<std::jthread>([&]() {
         log::set_thread_name(name_.c_str());
 
         // Retrieve the id
@@ -32,9 +31,7 @@ void Worker::start(bool kicked, bool wait) noexcept {
         ss << std::this_thread::get_id();
         id_.store(std::stoull(ss.str()));
 
-        // std::ignore = log::Trace("New worker thread started", {"name", name_, "id"}) << std::this_thread::get_id();
-        State expected_starting{State::kStarting};
-        if (state_.compare_exchange_strong(expected_starting, State::kStarted)) {
+        if (State expected_starting{State::kStarting}; state_.compare_exchange_strong(expected_starting, State::kStarted)) {
             thread_started_cv_.notify_one();
             signal_worker_state_changed(this);
             try {
