@@ -75,8 +75,8 @@ elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
     message(STATUS "${CMAKE_CXX_COMPILER_ID} version ${CMAKE_CXX_COMPILER_VERSION}")
 
     # Require at least GCC 11
-    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 11.0)
-        message(FATAL_ERROR "GCC Version must be at least 13")
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 11.2.0)
+        message(FATAL_ERROR "GCC Version must be at least 11.2.0")
     endif()
 
     if(ZEN_SANITIZE)
@@ -93,8 +93,8 @@ elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES ".*Clang$")
     message(STATUS "${CMAKE_CXX_COMPILER_ID} version ${CMAKE_CXX_COMPILER_VERSION}")
 
     # Require at least Clang 13
-    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 13.0)
-        message(FATAL_ERROR "Clang Version must be at least 13")
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 12.0)
+        message(FATAL_ERROR "Clang Version must be at least 12")
     endif()
 
     if(ZEN_CLANG_COVERAGE)
