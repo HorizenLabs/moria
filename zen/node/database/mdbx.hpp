@@ -15,7 +15,6 @@
 #pragma GCC diagnostic pop
 
 #include <absl/functional/function_ref.h>
-#include <boost/noncopyable.hpp>
 
 #include <zen/core/common/base.hpp>
 #include <zen/core/common/object_pool.hpp>
@@ -26,7 +25,7 @@ inline constexpr std::string_view kDbDataFileName{"mdbx.dat"};
 inline constexpr size_t kMdbxMaxPages{2147483648ULL};
 
 inline mdbx::slice to_slice(ByteView value) { return {value.data(), value.length()}; }
-inline mdbx::slice to_slice(std::string_view value) { return mdbx::slice(value); }
+inline mdbx::slice to_slice(std::string_view value) { return {value}; }
 
 inline ByteView from_slice(const mdbx::slice value) {
     return {static_cast<const uint8_t*>(value.data()), value.length()};
