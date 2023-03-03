@@ -38,10 +38,10 @@ class ByteView : public std::basic_string_view<uint8_t> {
   public:
     constexpr ByteView() noexcept = default;
 
-    explicit constexpr ByteView(const std::basic_string_view<uint8_t>& other) noexcept
+    constexpr ByteView(const std::basic_string_view<uint8_t>& other) noexcept
         : std::basic_string_view<uint8_t>{other.data(), other.length()} {}
 
-    explicit ByteView(const Bytes& str) noexcept : std::basic_string_view<uint8_t>{str.data(), str.length()} {}
+    constexpr ByteView(const Bytes& str) noexcept : std::basic_string_view<uint8_t>{str.data(), str.length()} {}
 
     constexpr ByteView(const uint8_t* data, size_type length) noexcept
         : std::basic_string_view<uint8_t>{data, length} {}

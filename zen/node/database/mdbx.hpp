@@ -26,6 +26,8 @@ inline constexpr std::string_view kDbDataFileName{"mdbx.dat"};
 inline constexpr size_t kMdbxMaxPages{2147483648ULL};
 
 inline mdbx::slice to_slice(ByteView value) { return {value.data(), value.length()}; }
+inline mdbx::slice to_slice(std::string_view value) { return mdbx::slice(value); }
+
 inline ByteView from_slice(const mdbx::slice value) {
     return {static_cast<const uint8_t*>(value.data()), value.length()};
 }
@@ -40,20 +42,30 @@ namespace detail {
 //! \brief This class wraps a read only transaction.
 //! It is used to make clear in the methods signature that the method does not require read-write access.
 //! It can either create a transaction from an environment or manage an externally created one.
-class ROTxn : private boost::noncopyable {
+class ROTxn {
   public:
+    //! \brief Creates new mdbx transactions as need be.
     explicit ROTxn(const mdbx::env& env) : managed_txn_{env.start_read()} {}
 
-    // Access to the underling raw mdbx transaction
-    mdbx::txn& operator*() { return managed_txn_; }
-    mdbx::txn* operator->() { return &managed_txn_; }
-    explicit operator mdbx::txn&() { return managed_txn_; }
+    //! \brief Just a wrapper over an external transaction.
+    explicit ROTxn(mdbx::txn& external_txn) : external_txn_{&external_txn} {}
 
-    void abort() { managed_txn_.abort(); }
+    //! \brief Move construction
+    ROTxn(ROTxn&& source) noexcept
+        : external_txn_(source.external_txn_), managed_txn_(std::move(source.managed_txn_)) {}
+
+    mdbx::txn& operator*() { return external_txn_ ? *external_txn_ : managed_txn_; }
+    mdbx::txn* operator->() { return external_txn_ ? external_txn_ : &managed_txn_; }
+    explicit operator mdbx::txn&() { return external_txn_ ? *external_txn_ : managed_txn_; }
+
+    void abort() {
+        if (!external_txn_) managed_txn_.abort();
+    }
 
   protected:
     explicit ROTxn(mdbx::txn_managed&& source) : managed_txn_{std::move(source)} {}
 
+    mdbx::txn* external_txn_{nullptr};
     mdbx::txn_managed managed_txn_;
 };
 
@@ -62,8 +74,19 @@ class ROTxn : private boost::noncopyable {
 //! The external transaction mode is handy for running several stages on a handful of blocks atomically.
 class RWTxn : public ROTxn {
   public:
-    // This variant creates new mdbx transactions as need be.
+    //! \brief Creates new mdbx transactions as need be.
     explicit RWTxn(mdbx::env& env) : ROTxn{env.start_write()} {}
+
+    //! \brief This variant is just a wrapper over an external transaction.
+    //! \remarks Useful in staged sync for running several stages on a handful of blocks atomically.
+    //! The code that invokes the stages is responsible for committing the external txn later on.
+    explicit RWTxn(mdbx::txn& external_txn) : ROTxn{external_txn} {}
+
+    // Not copyable
+    RWTxn(const RWTxn&) = delete;
+    RWTxn& operator=(const RWTxn&) = delete;
+    // Only movable
+    RWTxn(RWTxn&& source) noexcept : ROTxn(std::move(source)) {}
 
     void commit(const bool renew = true) {
         /*
@@ -77,11 +100,12 @@ class RWTxn : public ROTxn {
          * - either pass renew==false to last commit
          * - or keep RWTxn in a lower scope
          * */
-
-        mdbx::env env = managed_txn_.env();
-        managed_txn_.commit();
-        if (renew) {
-            managed_txn_ = env.start_write();  // renew transaction
+        if (external_txn_ == nullptr) {
+            mdbx::env env = managed_txn_.env();
+            managed_txn_.commit();
+            if (renew) {
+                managed_txn_ = env.start_write();  // renew transaction
+            }
         }
     }
 };
