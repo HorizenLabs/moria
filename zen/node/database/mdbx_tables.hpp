@@ -37,8 +37,17 @@ inline constexpr db::MapConfig kHeaders{"Headers"};
 
 inline constexpr const char* kDbSchemaVersionKey{"DbSchemaVersion"};
 
+//! \details Stores reached progress for each stage
+//! \struct
+//! \verbatim
+//!   key   : stage name
+//!   value : block_num_u32 (BE)
+//! \endverbatim
+inline constexpr db::MapConfig kSyncStageProgress{"Stages"};
+
+
 //! \brief List of all Chaindata database tables
-inline constexpr std::array<db::MapConfig, 2> kChainDataTables{kConfig, kHeaders};
+inline constexpr std::array<db::MapConfig, 3> kChainDataTables{kConfig, kHeaders, kSyncStageProgress};
 
 //! \brief Ensures all tables are properly deployed in database
 //! \remarks Should a table already exist it's flags are not checked.
@@ -47,12 +56,11 @@ template <size_t N>
 void deploy_tables(mdbx::txn& txn, const std::array<db::MapConfig, N> tables) {
     if (txn.is_readonly()) [[unlikely]]
         throw std::invalid_argument("Can't deploy tables on RO transaction");
+
     for (const auto& table : tables) {
-        if (has_map(txn, table)) continue;
-        std::ignore = txn.create_map(table.name, table.key_mode, table.value_mode);
+        if (!has_map(txn, table.name)) [[unlikely]]
+            std::ignore = txn.create_map(table.name, table.key_mode, table.value_mode);
     }
 }
-
-
 
 }  // namespace zen::db::tables

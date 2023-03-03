@@ -54,7 +54,7 @@ TEST_CASE("Database Environment", "[database]") {
             REQUIRE_NOTHROW((void)db::open_env(db_config));
         }
 
-        // Try reopen same db with different page size
+        // Try re-open same db with different page size
         db::EnvConfig db_config{tmp_dir.path().string(), /*create*/ false};
         db_config.inmemory = true;
         db_config.page_size = 16_Kibi;

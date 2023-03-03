@@ -31,4 +31,21 @@ TEST_CASE("Schema version", "[database]") {
     CHECK_THROWS(write_schema_version(*txn, *version));
 }
 
+TEST_CASE("Deploy Tables", "[database]") {
+    const TempDirectory tmp_dir{};
+    EnvConfig db_config{tmp_dir.path().string(), /*create=*/true};
+    db_config.inmemory = true;
+    auto env{db::open_env(db_config)};
+    RWTxn txn(env);
+
+    for (const auto& table : tables::kChainDataTables) {
+        CHECK_FALSE(has_map(*txn, table.name));
+    }
+
+    tables::deploy_tables(*txn, tables::kChainDataTables);
+    txn.commit();
+    for (const auto& table : tables::kChainDataTables) {
+        CHECK(has_map(*txn, table.name));
+    }
+}
 }  // namespace zen::db
