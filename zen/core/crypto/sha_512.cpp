@@ -22,6 +22,10 @@ Sha512::~Sha512() {
         ctx_pool_.add(ctx_.release());
     }
 }
+
+Sha512::Sha512(ByteView initial_data) : Sha512() { update(initial_data); }
+Sha512::Sha512(std::string_view initial_data) : Sha512(string_view_to_byte_view(initial_data)) {}
+
 void Sha512::init() noexcept {
     if (!ctx_) {
         ctx_.reset(ctx_pool_.acquire());

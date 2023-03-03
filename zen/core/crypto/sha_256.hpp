@@ -22,6 +22,9 @@ class Sha256 : private boost::noncopyable {
     Sha256();
     ~Sha256();
 
+    explicit Sha256(ByteView initial_data);
+    explicit Sha256(std::string_view initial_data);
+
     void init() noexcept;
     void update(ByteView data) noexcept;
     void update(std::string_view data) noexcept;

@@ -36,4 +36,23 @@ TEST_CASE("Sha256 test vectors", "[crypto]") {
     Test_Sha256( std::string(1'000'000, 'a'), "cdc76e5c9914fb9281a1c7e284d73e67f1809a48a497200e046d39ccc7112cd0");
     // clang-format on
 }
+
+TEST_CASE("Sha256 with init + update", "[crypto]") {
+    {
+        crypto::Sha256 sha256("abc");
+        auto hash{sha256.finalize()};
+        CHECK(hash.size() == crypto::Sha256::kDigestLength);
+        CHECK(zen::to_hex({hash.data(), hash.length()}) ==
+              "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad");
+    }
+
+    {
+        crypto::Sha256 sha256("This is exactly 64 bytes long");
+        sha256.update(", not counting the terminating byte");
+        auto hash{sha256.finalize()};
+        CHECK(hash.size() == crypto::Sha256::kDigestLength);
+        CHECK(zen::to_hex({hash.data(), hash.length()}) ==
+              "ab64eff7e88e2e46165e29f2bce41826bd4c7b3552f6b382a9e7d3af47c245f8");
+    }
+}
 }  // namespace zen

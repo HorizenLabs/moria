@@ -22,6 +22,10 @@ Sha256::~Sha256() {
         ctx_pool_.add(ctx_.release());
     }
 }
+
+Sha256::Sha256(ByteView initial_data) : Sha256() { update(initial_data); }
+Sha256::Sha256(std::string_view initial_data) : Sha256(string_view_to_byte_view(initial_data)) { }
+
 void Sha256::init() noexcept {
     if (!ctx_) {
         ctx_.reset(ctx_pool_.acquire());

@@ -35,4 +35,26 @@ TEST_CASE("Sha512 test vectors", "[crypto]") {
     Test_Sha512(std::string(1'000'000, 'a'), "e718483d0ce769644e2e42c7bc15b4638e1f98b13b2044285632a803afa973ebde0ff244877ea60a4cb0432ce577c31beb009c5c2c49aa2e4eadb217ad8cc09b");
     // clang-format on
 }
+
+TEST_CASE("Sha512 with init + update", "[crypto]") {
+    {
+        crypto::Sha512 sha512("abc");
+        auto hash{sha512.finalize()};
+        CHECK(hash.size() == crypto::Sha512::kDigestLength);
+        CHECK(zen::to_hex({hash.data(), hash.length()}) ==
+              "ddaf35a193617abacc417349ae20413112e6fa4e89a97ea20a9eeee64b55d39a"
+              "2192992a274fc1a836ba3c23a3feebbd454d4423643ce80e2a9ac94fa54ca49f");
+    }
+
+    {
+        crypto::Sha512 sha512("This is exactly 64 bytes long");
+        sha512.update(", not counting the terminating byte");
+        auto hash{sha512.finalize()};
+        CHECK(hash.size() == crypto::Sha512::kDigestLength);
+        CHECK(zen::to_hex({hash.data(), hash.length()}) ==
+              "70aefeaa0e7ac4f8fe17532d7185a289bee3b428d950c14fa8b713ca09814a38"
+              "7d245870e007a80ad97c369d193e41701aa07f3221d15f0e65a1ff970cedf030");
+    }
+}
+
 }  // namespace zen

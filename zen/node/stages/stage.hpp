@@ -8,14 +8,13 @@
 #pragma once
 
 #include <boost/noncopyable.hpp>
+#include <magic_enum.hpp>
 
 #include <zen/core/common/base.hpp>
 
 #include <zen/node/common/log.hpp>
 #include <zen/node/common/settings.hpp>
 #include <zen/node/concurrency/stoppable.hpp>
-
-#include "third-party/magic_enum/include/magic_enum.hpp"
 
 namespace zen::stages {
 
@@ -85,16 +84,16 @@ class Stage : public Stoppable {
     [[nodiscard]] virtual Stage::Result prune(db::RWTxn& txn) = 0;
 
     //! \brief Returns the actual progress recorded into db
-    BlockNum get_progress(db::RWTxn& txn);
+    [[nodiscard]] BlockNum get_progress(db::RWTxn& txn);
 
     //! \brief Returns the actual prune progress recorded into db
-    BlockNum get_prune_progress(db::RWTxn& txn);
+    [[nodiscard]] BlockNum get_prune_progress(db::RWTxn& txn);
 
     //! \brief Updates current stage progress
     void update_progress(db::RWTxn& txn, BlockNum progress);
 
     //! \brief Sets the prefix for logging lines produced by stage itself
-    void set_log_prefix(const std::string& prefix) { log_prefix_ = prefix; };
+    void set_log_prefix(const std::string_view prefix) { log_prefix_ = prefix; };
 
     //! \brief This function implementation MUST be thread safe as is called asynchronously from ASIO thread
     [[nodiscard]] virtual std::vector<std::string> get_log_progress() { return {}; };

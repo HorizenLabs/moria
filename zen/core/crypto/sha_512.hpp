@@ -22,6 +22,9 @@ class Sha512 : private boost::noncopyable {
     Sha512();
     ~Sha512();
 
+    explicit Sha512(ByteView initial_data);
+    explicit Sha512(std::string_view initial_data);
+
     void init() noexcept;
     void update(ByteView data) noexcept;
     void update(std::string_view data) noexcept;

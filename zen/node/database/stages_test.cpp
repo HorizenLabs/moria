@@ -31,6 +31,7 @@ TEST_CASE("Stages Progresses", "[database]") {
     txn.commit();
     source.bind(*txn, tables::kSyncStageProgress);
     CHECK(stages::read_stage_progress(*txn, stages::kBlockBodiesKey) == progress);
+    CHECK(source.size() == 1);
 
     CHECK_THROWS((void)stages::read_stage_progress(*txn, "UnknownStageName"));
 }
