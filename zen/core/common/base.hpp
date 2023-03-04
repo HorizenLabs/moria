@@ -19,7 +19,7 @@
 #include <intx/intx.hpp>
 
 #if defined(__wasm__)
-#define ZEN_THREAD_LOCAL static
+#define ZEN_THREAD_LOCAL
 #else
 #define ZEN_THREAD_LOCAL thread_local
 #endif

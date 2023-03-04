@@ -13,7 +13,7 @@
 
 namespace zen::crypto {
 
-thread_local ObjectPool<SHA512_CTX> Sha512::ctx_pool_{};
+ZEN_THREAD_LOCAL ObjectPool<SHA512_CTX> Sha512::ctx_pool_{};
 
 Sha512::Sha512() { init(); }
 

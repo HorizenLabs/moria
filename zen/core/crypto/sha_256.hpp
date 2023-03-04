@@ -35,7 +35,7 @@ class Sha256 : private boost::noncopyable {
 
   private:
     std::unique_ptr<SHA256_CTX> ctx_{nullptr};
-    static thread_local ObjectPool<SHA256_CTX> ctx_pool_;
+    static ZEN_THREAD_LOCAL ObjectPool<SHA256_CTX> ctx_pool_;
     std::array<uint8_t, SHA256_CBLOCK> buffer_{0x0};
     size_t buffer_offset_{0};
     size_t bytes_{0};

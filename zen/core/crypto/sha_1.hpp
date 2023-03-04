@@ -6,6 +6,7 @@
 */
 
 #pragma once
+
 #include <array>
 #include <cstdint>
 
@@ -16,28 +17,27 @@
 #include <zen/core/common/object_pool.hpp>
 
 namespace zen::crypto {
-//! \brief A wrapper around OpenSSL's SHA512 crypto functions
-class Sha512 : private boost::noncopyable {
+//! \brief A wrapper around OpenSSL's SHA1 crypto functions
+class Sha1 : private boost::noncopyable {
   public:
-    Sha512();
-    ~Sha512();
+    Sha1();
+    ~Sha1();
 
-    explicit Sha512(ByteView initial_data);
-    explicit Sha512(std::string_view initial_data);
+    explicit Sha1(ByteView initial_data);
+    explicit Sha1(std::string_view initial_data);
 
     void init() noexcept;
     void update(ByteView data) noexcept;
     void update(std::string_view data) noexcept;
     [[nodiscard]] Bytes finalize() noexcept;
-    [[nodiscard]] Bytes finalize_nopadding(bool compression) const noexcept;
 
-    static constexpr size_t kDigestLength{SHA512_DIGEST_LENGTH};
+    static constexpr size_t kDigestLength{SHA_DIGEST_LENGTH};
 
   private:
-    std::unique_ptr<SHA512_CTX> ctx_{nullptr};
-    static ZEN_THREAD_LOCAL ObjectPool<SHA512_CTX> ctx_pool_;
-    std::array<uint8_t, SHA512_CBLOCK> buffer_{0x0};
+    std::unique_ptr<SHA_CTX> ctx_{nullptr};
+    static thread_local ObjectPool<SHA_CTX> ctx_pool_;
+    std::array<uint8_t, SHA_CBLOCK> buffer_{0x0};
     size_t buffer_offset_{0};
     size_t bytes_{0};
 };
-}  // namespace zen::crypto
+} // namespace zen::crypto
