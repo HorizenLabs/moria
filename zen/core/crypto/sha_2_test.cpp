@@ -8,41 +8,14 @@
 
 #include <catch2/catch.hpp>
 
-#include <zen/core/common/cast.hpp>
+#include <zen/core/crypto/hasher_test.hpp>
 #include <zen/core/crypto/sha_2_256.hpp>
 #include <zen/core/crypto/sha_2_512.hpp>
-#include <zen/core/encoding/hex.hpp>
 
 namespace zen::crypto {
 
-template <typename Hasher>
-void run_sha2_tests(Hasher& hasher, const std::vector<std::string>& inputs, const std::vector<std::string>& digests) {
-    REQUIRE(inputs.size() == digests.size());
-
-    static std::random_device rd;
-    static std::mt19937_64 rng(rd());
-
-    for (size_t i{0}; i < inputs.size(); ++i) {
-        hasher.init();
-        auto input(string_view_to_byte_view(inputs[i]));
-
-        // Consume input in pieces to ensure partial updates don't break anything
-        while (!input.empty()) {
-            std::uniform_int_distribution<size_t> uni(1ULL, (input.size() / 2) + 1);
-            const size_t chunk_size{uni(rng)};
-            const auto input_chunk{input.substr(0, chunk_size)};
-            hasher.update(input_chunk);
-            input.remove_prefix(chunk_size);
-        }
-
-        const auto hash{hasher.finalize()};
-        CHECK(hash.size() == hasher.digest_length());
-        CHECK(zen::to_hex(hash) == digests[i]);
-    }
-}
-
 TEST_CASE("Sha2 test vectors", "[crypto]") {
-    static std::vector<std::string> inputs{
+    static const std::vector<std::string> inputs{
         "",                                                          // Test 1
         "abc",                                                       // Test 2
         "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq",  // Test 3
@@ -73,7 +46,7 @@ TEST_CASE("Sha2 test vectors", "[crypto]") {
         };
 
         Sha256 hasher;
-        run_sha2_tests(hasher, inputs, digests);
+        run_hasher_tests(hasher, inputs, digests);
     }
 
     SECTION("Sha512") {
@@ -103,7 +76,7 @@ TEST_CASE("Sha2 test vectors", "[crypto]") {
         };
 
         Sha512 hasher;
-        run_sha2_tests(hasher, inputs, digests);
+        run_hasher_tests(hasher, inputs, digests);
     }
 }
 }  // namespace zen::crypto

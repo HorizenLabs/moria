@@ -8,37 +8,37 @@
 #pragma once
 
 #include <array>
-#include <cstdint>
 
 #include <boost/noncopyable.hpp>
-#include <openssl/sha.h>
+#include <openssl/ripemd.h>
 
 #include <zen/core/common/base.hpp>
 #include <zen/core/common/object_pool.hpp>
 
 namespace zen::crypto {
-//! \brief A wrapper around OpenSSL's SHA1 crypto functions
-class Sha1 : private boost::noncopyable {
+//! \brief A wrapper around OpenSSL's RIPEMD160 crypto functions
+class Ripemd160 : private boost::noncopyable {
   public:
-    Sha1();
-    ~Sha1();
+    Ripemd160();
+    ~Ripemd160();
 
-    explicit Sha1(ByteView initial_data);
-    explicit Sha1(std::string_view initial_data);
+    explicit Ripemd160(ByteView initial_data);
+    explicit Ripemd160(std::string_view initial_data);
 
     void init() noexcept;
     void update(ByteView data) noexcept;
     void update(std::string_view data) noexcept;
     [[nodiscard]] Bytes finalize() noexcept;
 
-    inline constexpr size_t digest_length() { return SHA_DIGEST_LENGTH; };
-    inline constexpr size_t block_size() { return SHA_CBLOCK; };
+    inline constexpr size_t digest_length() { return RIPEMD160_DIGEST_LENGTH; };
+    inline constexpr size_t block_size() { return RIPEMD160_CBLOCK; };
 
   private:
-    std::unique_ptr<SHA_CTX> ctx_{nullptr};
-    static thread_local ObjectPool<SHA_CTX> ctx_pool_;
-    std::array<uint8_t, SHA_CBLOCK> buffer_{0x0};
+    std::unique_ptr<RIPEMD160_CTX> ctx_{nullptr};
+    static ZEN_THREAD_LOCAL ObjectPool<RIPEMD160_CTX> ctx_pool_;
+    std::array<uint8_t, RIPEMD160_CBLOCK> buffer_{0x0};
     size_t buffer_offset_{0};
     size_t bytes_{0};
 };
+
 }  // namespace zen::crypto

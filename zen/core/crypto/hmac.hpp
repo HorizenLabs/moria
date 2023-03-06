@@ -24,7 +24,8 @@ class Hmac : private boost::noncopyable {
     explicit Hmac(const ByteView initial_data) { init(initial_data); };
     explicit Hmac(const std::string_view initial_data) { init(initial_data); };
 
-    inline constexpr size_t kDigestLength() { return inner.digest_length(); };
+    inline constexpr size_t digest_length() { return inner.digest_length(); };
+    inline constexpr size_t block_size() { return inner.block_size(); };
 
     void init(const ByteView initial_data) {
         inner.init();

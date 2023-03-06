@@ -8,9 +8,8 @@
 #include <vector>
 
 #include <zen/core/common/cast.hpp>
+#include <zen/core/crypto/hasher_test.hpp>
 #include <zen/core/crypto/hmac.hpp>
-
-#include "common_test.hpp"
 
 namespace zen::crypto {
 
@@ -59,7 +58,7 @@ TEST_CASE("Hmac test vectors", "[crypto]") {
         };
 
         static Hmac_256 hasher;
-        run_hmac_tests(hasher, inputs, digests);
+        run_hasher_tests(hasher, inputs, digests);
     }
 
     SECTION("Hmac512") {
@@ -80,7 +79,7 @@ TEST_CASE("Hmac test vectors", "[crypto]") {
         };
 
         static Hmac_512 hasher;
-        run_hmac_tests(hasher, inputs, digests);
+        run_hasher_tests(hasher, inputs, digests);
     }
 }
 }  // namespace zen::crypto
