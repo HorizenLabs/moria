@@ -37,7 +37,7 @@ struct SyncContext : private boost::noncopyable {
 
 class Stage : public Stoppable {
   public:
-    enum class [[nodiscard]] Result {
+    enum class [[nodiscard]] Result{
         kSuccess,                 //
         kDbError,                 //
         kAborted,                 //

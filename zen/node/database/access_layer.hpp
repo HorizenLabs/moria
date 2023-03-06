@@ -11,6 +11,7 @@
 
 #include <zen/core/common/cast.hpp>
 #include <zen/core/common/endian.hpp>
+
 #include <zen/node/database/mdbx_tables.hpp>
 
 namespace zen::db {
@@ -22,4 +23,4 @@ std::optional<Version> read_schema_version(mdbx::txn& txn);
 //! \remarks Should new version be LT previous version an exception is thrown
 void write_schema_version(mdbx::txn& txn, const Version& version);
 
-} // namespace zen::db
+}  // namespace zen::db

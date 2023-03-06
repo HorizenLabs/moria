@@ -13,6 +13,7 @@
 #include <catch2/catch.hpp>
 
 #include <zen/core/common/cast.hpp>
+
 #include <zen/node/common/directories.hpp>
 #include <zen/node/database/mdbx.hpp>
 

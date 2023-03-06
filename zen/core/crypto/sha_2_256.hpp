@@ -30,8 +30,8 @@ class Sha256 : private boost::noncopyable {
     void update(std::string_view data) noexcept;
     [[nodiscard]] Bytes finalize() noexcept;
     [[nodiscard]] Bytes finalize_nopadding(bool compression) const noexcept;
-
-    static constexpr size_t kDigestLength{SHA256_DIGEST_LENGTH};
+    inline constexpr size_t digest_length() { return SHA256_DIGEST_LENGTH; };
+    inline constexpr size_t block_size() { return SHA256_CBLOCK; };
 
   private:
     std::unique_ptr<SHA256_CTX> ctx_{nullptr};

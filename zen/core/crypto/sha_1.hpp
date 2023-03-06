@@ -40,4 +40,4 @@ class Sha1 : private boost::noncopyable {
     size_t buffer_offset_{0};
     size_t bytes_{0};
 };
-} // namespace zen::crypto
+}  // namespace zen::crypto

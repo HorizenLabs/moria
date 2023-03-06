@@ -5,11 +5,10 @@
    file COPYING or http://www.opensource.org/licenses/mit-license.php.
 */
 
-#include "sha_512.hpp"
-
 #include <zen/core/common/assert.hpp>
 #include <zen/core/common/cast.hpp>
 #include <zen/core/common/endian.hpp>
+#include <zen/core/crypto/sha_2_512.hpp>
 
 namespace zen::crypto {
 

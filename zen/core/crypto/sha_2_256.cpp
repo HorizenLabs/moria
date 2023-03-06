@@ -5,11 +5,10 @@
    file COPYING or http://www.opensource.org/licenses/mit-license.php.
 */
 
-#include "sha_256.hpp"
-
 #include <zen/core/common/assert.hpp>
 #include <zen/core/common/cast.hpp>
 #include <zen/core/common/endian.hpp>
+#include <zen/core/crypto/sha_2_256.hpp>
 
 namespace zen::crypto {
 
@@ -24,7 +23,7 @@ Sha256::~Sha256() {
 }
 
 Sha256::Sha256(ByteView initial_data) : Sha256() { update(initial_data); }
-Sha256::Sha256(std::string_view initial_data) : Sha256(string_view_to_byte_view(initial_data)) { }
+Sha256::Sha256(std::string_view initial_data) : Sha256(string_view_to_byte_view(initial_data)) {}
 
 void Sha256::init() noexcept {
     if (!ctx_) {

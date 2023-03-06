@@ -21,6 +21,7 @@
 #include <boost/asio/io_context.hpp>
 
 #include <zen/core/common/assert.hpp>
+
 #include <zen/node/concurrency/ossignals.hpp>
 
 namespace zen {

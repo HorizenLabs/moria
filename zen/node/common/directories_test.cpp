@@ -10,6 +10,7 @@
 #include <catch2/catch.hpp>
 
 #include <zen/core/common/misc.hpp>
+
 #include <zen/node/common/directories.hpp>
 #include <zen/node/common/log_test.hpp>
 
@@ -67,7 +68,8 @@ TEST_CASE("Directory", "[misc]") {
             Directory current_dir(process_path.parent_path());
             std::string random_name{get_random_alpha_string(15)};
             std::filesystem::path sub_path{current_dir.path() / random_name};
-            ZEN_LOG << "Using sub dir path " << sub_path.string() << " " << (sub_path.is_absolute() ? "absolute" : "relative");
+            ZEN_LOG << "Using sub dir path " << sub_path.string() << " "
+                    << (sub_path.is_absolute() ? "absolute" : "relative");
             auto sub_dir{current_dir[sub_path]};
             ZEN_LOG << "Used sub dir path " << sub_dir.path().string();
             CHECK(sub_dir.exists());

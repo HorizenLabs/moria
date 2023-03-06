@@ -28,11 +28,7 @@ inline constexpr const char* kUnwindKey{"Unwind"};
 
 //! \brief List of all known stages
 inline constexpr const char* kAllStages[]{
-    kHeadersKey,
-    kBlockBodiesKey,
-    kExecutionKey,
-    kFinishKey,
-    kUnwindKey,
+    kHeadersKey, kBlockBodiesKey, kExecutionKey, kFinishKey, kUnwindKey,
 };
 
 //! \brief Stages won't log their "start" if segment is below this threshold
@@ -72,5 +68,4 @@ void write_stage_prune_progress(mdbx::txn& txn, const char* stage_name, BlockNum
 //! \return Whether it exists in kAllStages[]
 bool is_known_stage(const char* stage_name);
 
-
-} // namespace zen::db::stages
+}  // namespace zen::db::stages

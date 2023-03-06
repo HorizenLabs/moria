@@ -26,7 +26,6 @@ std::optional<Version> read_schema_version(mdbx::txn& txn) {
     return ret;
 }
 void write_schema_version(mdbx::txn& txn, const Version& version) {
-
     if (txn.is_readonly()) return;
     const auto prev_version{read_schema_version(txn)};
     if (version == prev_version) return;  // no need to update

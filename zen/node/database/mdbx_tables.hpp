@@ -45,7 +45,6 @@ inline constexpr const char* kDbSchemaVersionKey{"DbSchemaVersion"};
 //! \endverbatim
 inline constexpr db::MapConfig kSyncStageProgress{"Stages"};
 
-
 //! \brief List of all Chaindata database tables
 inline constexpr std::array<db::MapConfig, 3> kChainDataTables{kConfig, kHeaders, kSyncStageProgress};
 

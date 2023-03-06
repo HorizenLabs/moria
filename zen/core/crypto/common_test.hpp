@@ -14,8 +14,6 @@
 
 namespace zen::crypto {
 
-std::string LongTestString();
-
 template <typename Hasher>
 Bytes RunHasher(Hasher& hasher, std::string_view input) {
     static std::random_device rd;

@@ -40,8 +40,7 @@ TEST_CASE("Sha1 with init + update", "[crypto]") {
         crypto::Sha1 sha1("abc");
         auto hash{sha1.finalize()};
         CHECK(hash.size() == crypto::Sha1::kDigestLength);
-        CHECK(zen::to_hex({hash.data(), hash.length()}) ==
-              "a9993e364706816aba3e25717850c26c9cd0d89d");
+        CHECK(zen::to_hex({hash.data(), hash.length()}) == "a9993e364706816aba3e25717850c26c9cd0d89d");
     }
 
     {
@@ -49,8 +48,7 @@ TEST_CASE("Sha1 with init + update", "[crypto]") {
         sha1.update(", not counting the terminating byte");
         auto hash{sha1.finalize()};
         CHECK(hash.size() == crypto::Sha1::kDigestLength);
-        CHECK(zen::to_hex({hash.data(), hash.length()}) ==
-              "fb679f23e7d1ce053313e66e127ab1b444397057");
+        CHECK(zen::to_hex({hash.data(), hash.length()}) == "fb679f23e7d1ce053313e66e127ab1b444397057");
     }
 }
 }  // namespace zen
