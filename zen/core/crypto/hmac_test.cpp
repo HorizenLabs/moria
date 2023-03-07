@@ -1,5 +1,4 @@
 /*
-   Copyright 2014 The Bitcoin Core Developers
    Copyright 2023 Horizen Labs
    Distributed under the MIT software license, see the accompanying
    file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -57,7 +56,7 @@ TEST_CASE("Hmac test vectors", "[crypto]") {
             "9b09ffa71b942fcb27635fbcd5b0e944bfdc63644f0713938a7f51535c3a35e2",  // Test 7
         };
 
-        static Hmac_256 hasher;
+        static Hmac256 hasher;
         run_hasher_tests(hasher, inputs, digests);
     }
 
@@ -78,7 +77,7 @@ TEST_CASE("Hmac test vectors", "[crypto]") {
             "b6022cac3c4982b10d5eeb55c3e4de15134676fb6de0446065c97440fa8c6a58",  // Test 7
         };
 
-        static Hmac_512 hasher;
+        static Hmac512 hasher;
         run_hasher_tests(hasher, inputs, digests);
     }
 }

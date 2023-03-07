@@ -37,7 +37,7 @@ void run_hasher_tests(Hasher& hasher, const std::vector<std::string>& inputs, co
         }
 
         const auto hash{hasher.finalize()};
-        CHECK(hash.size() == hasher.digest_length());
+        CHECK(hash.size() == hasher.digest_size());
         CHECK(zen::to_hex(hash) == digests[i]);
     }
 }
@@ -67,7 +67,7 @@ void run_hasher_tests(Hasher& hasher, const std::vector<std::pair<std::string, s
         }
 
         const auto hash{hasher.finalize()};
-        CHECK(hash.size() == hasher.digest_length());
+        CHECK(hash.size() == hasher.digest_size());
         const auto hexed_hash{zen::to_hex(hash)};
         if (digests[i].length() < hexed_hash.length()) {
             CHECK(hexed_hash.substr(0, digests[i].size()) == digests[i]);

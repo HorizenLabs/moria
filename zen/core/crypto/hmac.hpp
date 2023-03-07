@@ -1,5 +1,4 @@
 /*
-   Copyright 2014 The Bitcoin Core Developers
    Copyright 2023 Horizen Labs
    Distributed under the MIT software license, see the accompanying
    file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -24,8 +23,8 @@ class Hmac : private boost::noncopyable {
     explicit Hmac(const ByteView initial_data) { init(initial_data); };
     explicit Hmac(const std::string_view initial_data) { init(initial_data); };
 
-    inline constexpr size_t digest_length() { return inner.digest_length(); };
-    inline constexpr size_t block_size() { return inner.block_size(); };
+    [[nodiscard]] constexpr size_t digest_size() const { return inner.digest_size(); };
+    [[nodiscard]] constexpr size_t block_size() const { return inner.block_size(); };
 
     void init(const ByteView initial_data) {
         inner.init();
@@ -68,7 +67,7 @@ class Hmac : private boost::noncopyable {
     SHA2_SIZE outer{};
 };
 
-using Hmac_256 = Hmac<Sha256>;
-using Hmac_512 = Hmac<Sha512>;
+using Hmac256 = Hmac<Sha256>;
+using Hmac512 = Hmac<Sha512>;
 
 }  // namespace zen::crypto
