@@ -87,9 +87,9 @@ void bench_sha512(benchmark::State& state) {
     }
 }
 
-BENCHMARK(bench_sha1)->Arg(1'000);
-BENCHMARK(bench_sha256)->Arg(1'000);
-BENCHMARK(bench_sha256_old)->Arg(1'000);
-BENCHMARK(bench_sha512)->Arg(1'000);
+BENCHMARK(bench_sha1)->Arg(10'000);
+BENCHMARK(bench_sha256)->Arg(10'000);
+BENCHMARK(bench_sha256_old)->Arg(10'000);
+BENCHMARK(bench_sha512)->Arg(10'000);
 
 }  // namespace zen
