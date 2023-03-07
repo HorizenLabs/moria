@@ -5,5 +5,5 @@
    file COPYING or http://www.opensource.org/licenses/mit-license.php.
 */
 
-#define CATCH_CONFIG_MAIN
-#include <catch2/catch.hpp>
+#include <benchmark/benchmark.h>
+BENCHMARK_MAIN();

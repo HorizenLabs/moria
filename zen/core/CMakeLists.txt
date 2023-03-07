@@ -19,6 +19,8 @@ endif()
 
 file(GLOB_RECURSE ZEN_CORE_SRC CONFIGURE_DEPENDS "*.cpp" "*.hpp" "*.c" "*.h")
 list(FILTER ZEN_CORE_SRC EXCLUDE REGEX "_test\\.cpp$")
+list(FILTER ZEN_CORE_SRC EXCLUDE REGEX "_benchmark\\.cpp$")
+
 
 add_library(zen_core ${ZEN_CORE_SRC} common/capped_set.hpp)
 target_include_directories(zen_core PUBLIC ${CMAKE_SOURCE_DIR})

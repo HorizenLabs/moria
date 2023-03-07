@@ -6,6 +6,7 @@
    file COPYING or http://www.opensource.org/licenses/mit-license.php.
 ]]
 
-if(ZEN_TESTS)
-    add_subdirectory(test) # The testing suites
-endif()
+if (ZEN_TESTS)
+    add_subdirectory(test)      # The testing suites
+    add_subdirectory(benchmark) # The benchmarking suites
+endif ()

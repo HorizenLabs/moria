@@ -14,6 +14,7 @@ find_package(nlohmann_json CONFIG REQUIRED)
 
 file(GLOB_RECURSE ZEN_NODE_SRC CONFIGURE_DEPENDS "*.cpp" "*.hpp" "*.c" "*.h" "*.cc")
 list(FILTER ZEN_NODE_SRC EXCLUDE REGEX "_test\\.cpp$")
+list(FILTER ZEN_NODE_SRC EXCLUDE REGEX "_benchmark\\.cpp$")
 list(LENGTH ZEN_NODE_SRC ZEN_NODE_SRC_ITEMS)
 
 if(NOT ZEN_NODE_SRC_ITEMS EQUAL 0)

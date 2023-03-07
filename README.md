@@ -117,12 +117,16 @@ Apart from the submodules and some auxiliary directories, Moria contains the fol
   <br /> This module contains the database, the staged sync loop and other logic necessary to function as a Zen node.
   This module depends on the `core` module.
 
+With reference to zen's modules subdirectories all files which name ends in `_test.[c|h]pp` or `_benchmark.[c|h]pp` (note the underscore) 
+will be compiled as part of the testing or the benchmarking suite respectively.
+
 ## Style guide
 We use standard C++20 programming language.
 We adhere to [Google's C++ Style Guide] with the following differences:
 - C++20 rather than C++17
-- `snake_case()` for function names
+- `snake_case()` for function and variable names
 - `member_variable_` names must have underscore suffix
+- prefixing variable names with meaningful types (e.g `vector<char> vChar{}`) is highly discouraged
 - classes and struct names must be in Pascal Case (`class FancyFoo`)
 - prefer `using` instead of `typedef`
 - `.cpp/.hpp` file extensions for C++ : `.c/.h` are reserved for C
