@@ -113,6 +113,9 @@ We use standard C++20 programming language.
 We adhere to [Google's C++ Style Guide] with the following differences:
 - C++20 rather than C++17
 - `snake_case()` for function names
+- `member_variable_` names must have underscore suffix
+- classes and struct names must be in Pascal Case (`class FancyFoo`)
+- prefer `using` instead of `typedef`
 - `.cpp/.hpp` file extensions for C++ : `.c/.h` are reserved for C
 - `using namespace foo` is allowed into source files (`.cpp`) but not inside headers
 - Exceptions are allowed **outside** the `core` library
