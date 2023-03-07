@@ -71,6 +71,18 @@ option(ZEN_TESTS "Build tests" ON)
 get_filename_component(ZEN_MAIN_DIR . ABSOLUTE)
 set(ZEN_MAIN_SRC_DIR "${ZEN_MAIN_DIR}/zen")
 
+message(
+        "\n----------------------------------------------------------------------------\n"
+        "-- Cmake ${CMAKE_VERSION}\n"
+        "-- Build ${CMAKE_BUILD_TYPE} / ${CMAKE_SYSTEM_NAME} / ${CMAKE_SYSTEM_PROCESSOR}\n"
+        "----------------------------------------------------------------------------\n"
+        "-- ZEN_CORE_ONLY      Only Build Zen Core                      ${ZEN_CORE_ONLY}\n"
+        "-- ZEN_CLANG_COVERAGE Clang instrumentation for code coverage  ${ZEN_CLANG_COVERAGE}\n"
+        "-- ZEN_SANITIZE       Build instrumentation for sanitizers     ${ZEN_SANITIZE}\n"
+        "-- ZEN_TESTS          Build unit / consensus tests             ${ZEN_TESTS}\n"
+        "----------------------------------------------------------------------------\n"
+)
+
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/toolchain/compiler_settings.cmake)
 
 # Include dependencies handled by Hunter package manager
@@ -89,6 +101,8 @@ if(NOT ZEN_CORE_ONLY)
 
     # MDBX
     set(MDBX_ENABLE_TESTS OFF)
+    set(MDBX_ALLOY_BUILD ON)
+    set(MDBX_BUILD_TIMESTAMP:string unknown) # For reproducible builds
     add_subdirectory(third-party/libmdbx)
     target_include_directories(mdbx-static INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/third-party/libmdbx)
 

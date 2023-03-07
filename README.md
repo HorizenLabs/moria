@@ -47,11 +47,20 @@ Once the prerequisites are installed boostrap cmake by running
 ```shell
 mkdir build
 cd build
-cmake ..
+cmake [-DCMAKE_BUILD_TYPE="[Debug|Release|RelWithDebInfo|MinSizeRel]"]..
 ```
 _On the very first run of this command the toolchain will download and build additional components like, for example, the Boost Library.
 This operation may take some time depending on the capabilities of your hardware and your internet connection.
 Please be patient._
+
+Additional CMAKE options (specify with `-D<OPTION_NAME:bool>=ON`):
+
+| OPTION_NAME          | Description                                        | Default |
+|:---------------------|:---------------------------------------------------|:-------:|
+| `ZEN_CORE_ONLY`      | Only build ZEN Core components                     |   OFF   |
+| `ZEN_CLANG_COVERAGE` | **Clang** (only) instrumentation for code coverage |   OFF   |
+| `ZEN_SANITIZE`       | Build instrumentation for sanitizers               |   OFF   |
+| `ZEN_TESTS`          | Build unit / consensus tests                       |   ON    |
 
 Then run the build itself
 ```shell
@@ -60,10 +69,10 @@ make -j
 _Note about parallel builds using `-j`: if not specified the exact number of parallel tasks, the compiler will spawn as many
 as the cores available. That may cause OOM errors if the build is executed on a host with a large number of cores but a relatively
 small amount of RAM. To work around this, either specify `-jn` where `n` is the number of parallel tasks you want to allow or
-remove `-j` completely. Typically, for Moria each compiler job requires 4GB of RAM. So, if your total RAM is 16GB, for example,
+remove `-j` completely. Typically, for Moria each compiler job requires up to 4GB of RAM. So if, for example, your total RAM is 16GB
 then `-j4` should be OK, while `-j8` is probably not. It also means that you need a machine with at least 4GB RAM to compile Moria._
 
-Now you can run the unit tests. There's one for core and one for node.
+Now you can run the unit tests (if you have chosen to build them. There's one for `core` and one for `node`.
 ```shell
 ./cmd/test/core_test
 ./cmd/test/node_test
