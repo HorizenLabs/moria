@@ -31,4 +31,10 @@ set_target_properties(zen_core PROPERTIES LINKER_LANGUAGE CXX)
 set(ZEN_CORE_PUBLIC_LIBS intx::intx Microsoft.GSL::GSL nlohmann_json OpenSSL::Crypto)
 set(ZEN_CORE_PRIVATE_LIBS "")
 
+if(MSVC)
+    # See https://github.com/microsoft/vcpkg/issues/2621#issuecomment-359374703
+    list(APPEND ZEN_CORE_PRIVATE_LIBS Ws2_32.lib)
+endif(MSVC)
+
+
 target_link_libraries(zen_core PUBLIC ${ZEN_CORE_PUBLIC_LIBS} PRIVATE ${ZEN_CORE_PRIVATE_LIBS})

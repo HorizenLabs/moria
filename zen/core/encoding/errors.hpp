@@ -12,10 +12,13 @@ namespace zen {
 
 enum class DecodingError : uint32_t {
     kSuccess,
-    kInvalidHexDigit
+    kInvalidHexDigit,
+    kInvalidInput,  // Base32 or Base64 invalid data
 };
 
 enum class EncodingError : uint32_t {
     kSuccess,
+    kInputTooLong,
+    kUnexpectedError,
 };
 }  // namespace zen
