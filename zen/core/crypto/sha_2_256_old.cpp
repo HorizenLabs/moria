@@ -8,6 +8,9 @@
 #include <zen/core/common/endian.hpp>
 #include <zen/core/crypto/sha_2_256_old.hpp>
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wsign-conversion"
+
 namespace zen::crypto {
 
 namespace {
@@ -185,3 +188,5 @@ Sha256Old& Sha256Old::Reset() {
 }
 
 }  // namespace zen::crypto
+
+#pragma GCC diagnostic pop
