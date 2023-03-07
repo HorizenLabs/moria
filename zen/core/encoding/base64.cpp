@@ -39,7 +39,7 @@ tl::expected<std::string, EncodingError> encode(ByteView bytes) noexcept {
     BIO_flush(b64.get());
     const char* encoded;
     const long encoded_len{BIO_get_mem_data(sink, &encoded)};
-    return std::string(encoded, encoded_len);
+    return std::string(encoded, static_cast<std::string::size_type>(encoded_len));
 }
 
 tl::expected<std::string, EncodingError> encode(std::string_view data) noexcept {
@@ -56,7 +56,7 @@ tl::expected<Bytes, DecodingError> decode(std::string_view input) noexcept {
     Bytes ret(maxlen, '\0');
     const auto effective_len{BIO_read(b64.get(), ret.data(), static_cast<int>(maxlen))};
     if (effective_len <= 0) return tl::unexpected(DecodingError::kInvalidInput);
-    ret.resize(effective_len);
+    ret.resize(static_cast<std::string::size_type>(effective_len));
     return ret;
 }
 
