@@ -22,7 +22,7 @@ void bench_hex(benchmark::State& state) {
     int items_processed{0};
     const auto input{zen::get_random_alpha_string(kInputSize)};
     for ([[maybe_unused]] auto _ : state) {
-        const auto hex_result{to_hex(string_view_to_byte_view(input))};
+        const auto hex_result{hex::encode(string_view_to_byte_view(input))};
         benchmark::DoNotOptimize(hex_result.data());
         bytes_processed += static_cast<int>(hex_result.length());
         ++items_processed;

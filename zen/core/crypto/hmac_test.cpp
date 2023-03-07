@@ -12,35 +12,21 @@
 
 namespace zen::crypto {
 
-template <typename Hasher>
-void run_hmac_tests(Hasher& hasher, const std::vector<std::pair<std::string, std::string>>& inputs,
-                    const std::vector<std::string> digests) {
-    REQUIRE(inputs.size() == digests.size());
-    for (size_t i{0}; i < inputs.size(); ++i) {
-        hasher.init(*zen::from_hex(inputs[i].first));
-        const auto hash{zen::to_hex(RunHasher(hasher, byte_view_to_string_view(*zen::from_hex(inputs[i].second))))};
-        if (digests[i].length() < hash.length()) {
-            CHECK(hash.starts_with(digests[i]));
-        } else {
-            CHECK(hash == digests[i]);
-        }
-    }
-}
-
 TEST_CASE("Hmac test vectors", "[crypto]") {
     // See https://www.rfc-editor.org/rfc/rfc4231
     static const std::vector<std::pair<std::string, std::string>> inputs{
-        {zen::to_hex(Bytes(20, 0x0b)), zen::to_hex(string_view_to_byte_view("Hi There"))},  // Test 1
-        {zen::to_hex(string_view_to_byte_view("Jefe")),
-         zen::to_hex(string_view_to_byte_view("what do ya want for nothing?"))},                        // Test 2
-        {std::string(40, 'a'), std::string(100, 'd')},                                                  // Test 3
-        {"0102030405060708090a0b0c0d0e0f10111213141516171819", zen::to_hex(Bytes(50, 0xcd))},           // Test 4
-        {zen::to_hex(Bytes(20, 0x0c)), zen::to_hex(string_view_to_byte_view("Test With Truncation"))},  // Test 5
+        {zen::hex::encode(Bytes(20, 0x0b)), zen::hex::encode(string_view_to_byte_view("Hi There"))},  // Test 1
+        {zen::hex::encode(string_view_to_byte_view("Jefe")),
+         zen::hex::encode(string_view_to_byte_view("what do ya want for nothing?"))},               // Test 2
+        {std::string(40, 'a'), std::string(100, 'd')},                                              // Test 3
+        {"0102030405060708090a0b0c0d0e0f10111213141516171819", zen::hex::encode(Bytes(50, 0xcd))},  // Test 4
+        {zen::hex::encode(Bytes(20, 0x0c)),
+         zen::hex::encode(string_view_to_byte_view("Test With Truncation"))},  // Test 5
         {std::string(262, 'a'),
-         zen::to_hex(string_view_to_byte_view("Test Using Larger Than Block-Size Key - Hash Key First"))},  // Test
-                                                                                                            // 6
+         zen::hex::encode(string_view_to_byte_view("Test Using Larger Than Block-Size Key - Hash Key First"))},  // Test
+                                                                                                                 // 6
         {std::string(262, 'a'),
-         zen::to_hex(string_view_to_byte_view(
+         zen::hex::encode(string_view_to_byte_view(
              "This is a test using a larger than block-size key and a larger than block-size data. The key needs to be "
              "hashed before being used by the HMAC algorithm."))},  // Test 7
     };

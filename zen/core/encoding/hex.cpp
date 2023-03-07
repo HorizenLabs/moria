@@ -10,7 +10,7 @@
 #include <array>
 #include <ranges>
 
-namespace zen {
+namespace zen::hex {
 
 // ASCII -> hex value (0xff means bad [hex] char)
 static constexpr std::array<uint8_t, 256> kUnhexTable{
@@ -56,7 +56,7 @@ ByteView zeroless_view(ByteView data) {
     return data;
 }
 
-std::string to_hex(ByteView bytes, const bool with_prefix) noexcept {
+std::string encode(ByteView bytes, bool with_prefix) noexcept {
     static const char* kHexDigits{"0123456789abcdef"};
     std::string out(bytes.length() * 2 + (with_prefix ? 2 : 0), '\0');
     char* dest{&out[0]};
@@ -71,8 +71,8 @@ std::string to_hex(ByteView bytes, const bool with_prefix) noexcept {
     return out;
 }
 
-tl::expected<Bytes, DecodingError> from_hex(std::string_view source) noexcept {
-    if (has_hex_prefix(source)) {
+tl::expected<Bytes, DecodingError> decode(std::string_view source) noexcept {
+    if (has_prefix(source)) {
         source.remove_prefix(2);
     }
     if (source.empty()) {
@@ -124,10 +124,10 @@ tl::expected<Bytes, DecodingError> from_hex(std::string_view source) noexcept {
     return out;
 }
 
-tl::expected<unsigned, DecodingError> decode_hex_digit(const char input) noexcept {
+tl::expected<unsigned, DecodingError> decode_digit(const char input) noexcept {
     auto value = kUnhexTable[static_cast<uint8_t>(input)];
     if (value == 0xff) return tl::unexpected{DecodingError::kInvalidHexDigit};
     return value;
 }
 
-}  // namespace zen
+}  // namespace zen::hex

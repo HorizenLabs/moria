@@ -19,13 +19,13 @@ Hash::Hash(ByteView init) {
 Hash::Hash(uint64_t value) { endian::store_big_u64(&bytes_[24], value); }
 
 tl::expected<Hash, DecodingError> Hash::from_hex(std::string_view input) noexcept {
-    const auto parsed_bytes{zen::from_hex(input)};
+    const auto parsed_bytes{zen::hex::decode(input)};
     if (!parsed_bytes) return tl::unexpected(parsed_bytes.error());
     return Hash(ByteView(*parsed_bytes));
 }
 
 std::string Hash::to_hex(bool with_prefix) const noexcept {
-    return zen::to_hex({&bytes_[0], kHashLength}, with_prefix);
+    return zen::hex::encode({&bytes_[0], kHashLength}, with_prefix);
 }
 
 }  // namespace zen

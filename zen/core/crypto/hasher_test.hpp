@@ -38,7 +38,7 @@ void run_hasher_tests(Hasher& hasher, const std::vector<std::string>& inputs, co
 
         const auto hash{hasher.finalize()};
         CHECK(hash.size() == hasher.digest_size());
-        CHECK(zen::to_hex(hash) == digests[i]);
+        CHECK(zen::hex::encode(hash) == digests[i]);
     }
 }
 
@@ -51,8 +51,8 @@ void run_hasher_tests(Hasher& hasher, const std::vector<std::pair<std::string, s
     static std::mt19937_64 rng(rd());
 
     for (size_t i{0}; i < inputs.size(); ++i) {
-        const auto initial_key{*zen::from_hex(inputs[i].first)};
-        const auto input{*zen::from_hex(inputs[i].second)};
+        const auto initial_key{*zen::hex::decode(inputs[i].first)};
+        const auto input{*zen::hex::decode(inputs[i].second)};
         ByteView input_view{input};
 
         hasher.init(initial_key);
@@ -68,7 +68,7 @@ void run_hasher_tests(Hasher& hasher, const std::vector<std::pair<std::string, s
 
         const auto hash{hasher.finalize()};
         CHECK(hash.size() == hasher.digest_size());
-        const auto hexed_hash{zen::to_hex(hash)};
+        const auto hexed_hash{zen::hex::encode(hash)};
         if (digests[i].length() < hexed_hash.length()) {
             CHECK(hexed_hash.substr(0, digests[i].size()) == digests[i]);
         } else {
