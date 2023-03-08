@@ -13,6 +13,9 @@
 #include <zen/core/encoding/base64.hpp>
 
 namespace zen::base64 {
+
+// Inspired by https://stackoverflow.com/questions/5288076/base64-encoding-and-decoding-with-openssl
+
 namespace {
     struct BIOFreeAll {
         void operator()(BIO* p) const { BIO_free_all(p); }

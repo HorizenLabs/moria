@@ -12,6 +12,8 @@
 #include <map>
 #include <mutex>
 
+#include <boost/noncopyable.hpp>
+
 #include <zen/core/common/assert.hpp>
 #include <zen/core/common/base.hpp>
 
@@ -31,7 +33,7 @@ void memory_cleanse(void* ptr, size_t size);
 //! \brief A manager for locked memory pages (prevents memory from being paged out)
 //! \remarks Thread safe
 template <class Locker>
-class LockedPagesManagerBase {
+class LockedPagesManagerBase : private boost::noncopyable {
   public:
     LockedPagesManagerBase() : LockedPagesManagerBase(get_system_page_size()){};
 
@@ -49,7 +51,7 @@ class LockedPagesManagerBase {
         bool ret{true};
         std::scoped_lock lock(mutex_);
         const auto [start, end]{get_range_boundaries(address, size)};
-        for (size_t page{start}; page <= end && ret; page += page_size_) {
+        for (size_t page{start}; page <= end; page += page_size_) {
             if (auto item = locked_pages_.find(page); item != locked_pages_.end()) {
                 ++item->second;
                 continue;
@@ -57,10 +59,11 @@ class LockedPagesManagerBase {
             // Try lock the page
             if (locker_.lock(reinterpret_cast<void*>(page), page_size_)) {
                 locked_pages_.insert({page, 1});
-                continue;
+            } else {
+                // Failed to lock the page
+                ret = false;
+                break;
             }
-            // Failed to lock the page
-            ret = false;
         }
         return ret;
     }
@@ -120,9 +123,9 @@ class LockedPagesManagerBase {
   private:
     Locker locker_;
     mutable std::mutex mutex_;
-    size_t page_size_;
-    size_t page_mask_;
-    std::map<size_t, int> locked_pages_;
+    size_t page_size_{0};
+    size_t page_mask_{0};
+    std::map<size_t, intptr_t> locked_pages_;
 
     [[nodiscard]] std::pair<size_t, size_t> get_range_boundaries(const void* address, size_t size) const {
         const auto base_address = reinterpret_cast<size_t>(address);

@@ -33,8 +33,7 @@ ByteView zeroless_view(ByteView data);
 [[nodiscard]] std::string encode(ByteView bytes, bool with_prefix = false) noexcept;
 
 //! \brief Returns a string of ascii chars with the hexadecimal representation of provided unsigned integral
-template <typename T>
-requires std::is_integral_v<T> && std::is_unsigned_v<T>
+template <UnsignedIntegral T>
 [[nodiscard]] std::string encode(const T value, bool with_prefix = false) noexcept {
     uint8_t bytes[sizeof(T)];
     intx::be::store(bytes, value);

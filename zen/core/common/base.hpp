@@ -6,13 +6,12 @@
 */
 
 #pragma once
-#ifndef ZEN_CORE_COMMON_BASE_HPP_
-#define ZEN_CORE_COMMON_BASE_HPP_
 
 #include <compare>
 #include <concepts>
 #include <cstddef>
 #include <cstdint>
+#include <cstdlib>
 #include <string>
 #include <string_view>
 
@@ -66,12 +65,13 @@ inline constexpr uint64_t kGibi{1024 * kMebi};
 inline constexpr uint64_t kTebi{1024 * kGibi};
 
 constexpr uint64_t operator"" _Kibi(unsigned long long x) { return x * kKibi; }
-
 constexpr uint64_t operator"" _Mebi(unsigned long long x) { return x * kMebi; }
-
 constexpr uint64_t operator"" _Gibi(unsigned long long x) { return x * kGibi; }
-
 constexpr uint64_t operator"" _Tebi(unsigned long long x) { return x * kTebi; }
 
+static constexpr int64_t kCoin = 100'000'000;
+static constexpr int64_t kCoinCent = kCoin / 100;
+static constexpr int64_t kMaxMoney = kCoin * 21'000'000;  // No amount larger than this is valid
+static constexpr std::string_view kCurrency{"ZEN"};
+
 }  // namespace zen
-#endif  // ZEN_CORE_COMMON_BASE_HPP_
