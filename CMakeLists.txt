@@ -73,8 +73,9 @@ set(ZEN_MAIN_SRC_DIR "${ZEN_MAIN_DIR}/zen")
 
 message(
         "\n----------------------------------------------------------------------------\n"
-        "-- Cmake ${CMAKE_VERSION}\n"
-        "-- Build ${CMAKE_BUILD_TYPE} / ${CMAKE_SYSTEM_NAME} / ${CMAKE_SYSTEM_PROCESSOR}\n"
+        "-- Cmake    ${CMAKE_VERSION}\n"
+        "-- Compiler ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}\n"
+        "-- Build    ${CMAKE_BUILD_TYPE} ${CMAKE_SYSTEM_NAME} ${CMAKE_SYSTEM_PROCESSOR}\n"
         "----------------------------------------------------------------------------\n"
         "-- ZEN_CORE_ONLY      Only Build Zen Core                      ${ZEN_CORE_ONLY}\n"
         "-- ZEN_CLANG_COVERAGE Clang instrumentation for code coverage  ${ZEN_CLANG_COVERAGE}\n"

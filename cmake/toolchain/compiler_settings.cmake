@@ -8,12 +8,10 @@
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 
-    message(STATUS "MSVC_VERSION = ${MSVC_VERSION}")
-    message(STATUS "MSVC_CXX_ARCHITECTURE_ID = ${MSVC_CXX_ARCHITECTURE_ID}")
-    if(MSVC_VERSION LESS_EQUAL 1928)
+    if (MSVC_VERSION LESS_EQUAL 1928)
         message(FATAL_ERROR "Your MSVC version is too low."
                 "Please update your Visual Studio to at least release 2019 16.9.2")
-    endif()
+    endif ()
 
 
     add_definitions(-D_WIN32_WINNT=0x0A00)  # Min Windows 10
@@ -58,58 +56,62 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 
     add_link_options(/ignore:4099)
 
-    if(CMAKE_BUILD_TYPE MATCHES "Release")
+    if (CMAKE_BUILD_TYPE MATCHES "Release")
         add_compile_options(/GL)                                                  # Enable LTCG for faster builds
         set(CMAKE_STATIC_LINKER_FLAGS "${CMAKE_STATIC_LINKER_FLAGS} /LTCG")       # Enable LTCG for faster builds
         set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /LTCG")             # Enable LTCG for faster builds
         set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /OPT:REF /OPT:ICF") # Enable unused references removal
         set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /RELEASE")          # Enable RELEASE so that the executable file has its checksum set
-    endif()
+    endif ()
 
-    if(CMAKE_BUILD_TYPE MATCHES "Debug")
+    if (CMAKE_BUILD_TYPE MATCHES "Debug")
         set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /VERBOSE /TIME")    # Debug linker
-    endif()
+    endif ()
 
-elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
-
-    message(STATUS "${CMAKE_CXX_COMPILER_ID} version ${CMAKE_CXX_COMPILER_VERSION}")
+elseif ("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
 
     # Require at least GCC 11
-    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 13.0.0)
-        message(FATAL_ERROR "GCC Version must be at least 13.0.0")
-    endif()
+    if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 13.0.0)
+        message(FATAL_ERROR
+                "\n===================================\n"
+                "    GCC Version must be at least 13"
+                "\n===================================\n"
+                )
+    endif ()
 
-    if(ZEN_SANITIZE)
+    if (ZEN_SANITIZE)
         add_compile_options(-fno-omit-frame-pointer -fsanitize=${ZEN_SANITIZE} -DZEN_SANITIZE)
         add_link_options(-fno-omit-frame-pointer -fsanitize=${ZEN_SANITIZE} -DZEN_SANITIZE)
-    endif()
+    endif ()
 
-    if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    if (CMAKE_BUILD_TYPE STREQUAL "Release")
         add_compile_options(-g1)
-    endif()
+    endif ()
 
-elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES ".*Clang$")
-
-    message(STATUS "${CMAKE_CXX_COMPILER_ID} version ${CMAKE_CXX_COMPILER_VERSION}")
+elseif ("${CMAKE_CXX_COMPILER_ID}" MATCHES ".*Clang$")
 
     # Require at least Clang 14
-    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 14.0)
-        message(FATAL_ERROR "Clang Version must be at least 14")
-    endif()
+    if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 14.0)
+        message(FATAL_ERROR
+                "\n===================================\n"
+                "  Clang Version must be at least 14"
+                "\n===================================\n"
+                )
+    endif ()
 
-    if(ZEN_CLANG_COVERAGE)
+    if (ZEN_CLANG_COVERAGE)
         add_compile_options(-fprofile-instr-generate -fcoverage-mapping)
         add_link_options(-fprofile-instr-generate -fcoverage-mapping)
-    endif()
+    endif ()
 
-    if(ZEN_SANITIZE)
+    if (ZEN_SANITIZE)
         add_compile_options(-fno-omit-frame-pointer -fsanitize=${ZEN_SANITIZE} -DZEN_SANITIZE)
         add_link_options(-fno-omit-frame-pointer -fsanitize=${ZEN_SANITIZE} -DZEN_SANITIZE)
-    endif()
+    endif ()
 
-    if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    if (CMAKE_BUILD_TYPE STREQUAL "Release")
         add_compile_options(-gline-tables-only)
-    endif()
+    endif ()
 
     # coroutines support
     add_compile_options(-stdlib=libc++)
@@ -119,8 +121,8 @@ elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES ".*Clang$")
 else ()
 
     message(FATAL_ERROR "${CMAKE_CXX_COMPILER_ID} has not been tested or supported."
-                        "Please amend compiler_settings.cmake to proceed with build"
-                        "or notify the issue on the GitHub repository you've cloned"
-                        "this project from")
+            "Please amend compiler_settings.cmake to proceed with build"
+            "or notify the issue on the GitHub repository you've cloned"
+            "this project from")
 
-endif()
+endif ()
