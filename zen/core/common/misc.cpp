@@ -7,10 +7,9 @@
 
 #include "misc.hpp"
 
-#include <iomanip>
+#include <format>
 #include <random>
 #include <regex>
-#include <sstream>
 
 #include <boost/algorithm/string.hpp>
 
@@ -83,10 +82,8 @@ std::string to_string_binary(const size_t input) {
         }
     }
 
-    // TODO(C++20/23) Replace with std::format when widely available on GCC and Clang
-    std::stringstream ss;
-    ss << std::fixed << std::setprecision(index ? 2 : 0) << value << " " << suffix[index];
-    return ss.str();
+    const uint16_t precision(index ? 2 : 0);
+    return std::format("{:0.{}f} {}", value, precision, suffix[index]);
 }
 
 std::string get_random_alpha_string(size_t length) {

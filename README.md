@@ -29,12 +29,12 @@ This project is under active development and hasn't reached the alpha phase yet.
 
 To obtain Moria's source code for the first time you need to install git on your computer and
 ```shell
-git clone --recurse-submodules https://github.com/HorizenLabs/moria.git
-cd moria
+$ git clone --recurse-submodules https://github.com/HorizenLabs/moria.git
+$ cd moria
 ```
 Moria uses a some git submodules (which may eventually have their own submodules) : so after you've updated to the latest code with `git pull` remember to also update submodules with
 ```shell
-git submodule update --init --recursive
+$ git submodule update --init --recursive
 ```
 ## Building on Linux & MacOS
 
@@ -45,13 +45,22 @@ Ensure you have the following requirements installed :
 
 Once the prerequisites are installed boostrap cmake by running
 ```shell
-mkdir build
-cd build
-cmake [-DCMAKE_BUILD_TYPE="[Debug|Release|RelWithDebInfo|MinSizeRel]"]..
+$ mkdir build
+$ cd build
+$ cmake [-DCMAKE_BUILD_TYPE="[Debug|Release|RelWithDebInfo|MinSizeRel]"]..
 ```
 _On the very first run of this command the toolchain will download and build additional components like, for example, the Boost Library.
 This operation may take some time depending on the capabilities of your hardware and your internet connection.
 Please be patient._
+
+If you're on linux and have both GCC and Clang installed CMAKE will use GCC by default. Should you want to force the build using clang simply export the
+following variables before invoking cmake
+```shell
+$ export CC=/usr/bin/clang
+$ export CXX=/usr/bin/clang++
+$ cmake [-DCMAKE_BUILD_TYPE="[Debug|Release|RelWithDebInfo|MinSizeRel]"]..
+```
+**Important** Should you already have built with GCC earlier remember do erase the `build` directory and re-create it.
 
 Additional CMAKE options (specify with `-D<OPTION_NAME:bool>=ON`):
 
@@ -74,8 +83,8 @@ then `-j4` should be OK, while `-j8` is probably not. It also means that you nee
 
 Now you can run the unit tests (if you have chosen to build them. There's one for `core` and one for `node`.
 ```shell
-./cmd/test/core_test
-./cmd/test/node_test
+$ ./cmd/test/core_test
+$ ./cmd/test/node_test
 ```
 
 ## Building on Windows

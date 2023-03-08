@@ -74,7 +74,7 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
     if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 13.0.0)
         message(FATAL_ERROR
                 "\n===================================\n"
-                "    GCC Version must be at least 13"
+                "GCC Version must be at least 13"
                 "\n===================================\n"
                 )
     endif ()
@@ -94,7 +94,7 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" MATCHES ".*Clang$")
     if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 14.0)
         message(FATAL_ERROR
                 "\n===================================\n"
-                "  Clang Version must be at least 14"
+                "Clang Version must be at least 14"
                 "\n===================================\n"
                 )
     endif ()
@@ -114,7 +114,7 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" MATCHES ".*Clang$")
     endif ()
 
     # coroutines support
-    add_compile_options(-stdlib=libc++)
+    add_compile_options(-stdlib=libstdc++)
     link_libraries(c++)
     link_libraries(c++abi)
 
