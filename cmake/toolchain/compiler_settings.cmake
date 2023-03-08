@@ -113,10 +113,12 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" MATCHES ".*Clang$")
         add_compile_options(-gline-tables-only)
     endif ()
 
-    # coroutines support
-    add_compile_options(-stdlib=libstdc++)
-    link_libraries(c++)
-    link_libraries(c++abi)
+    if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+        # coroutines support
+        add_compile_options(-stdlib=libc++)
+        link_libraries(c++)
+        link_libraries(c++abi)
+    endif ()
 
 else ()
 
