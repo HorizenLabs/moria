@@ -14,13 +14,17 @@ list(LENGTH ZEN_CORE_TESTS ZEN_CORE_SOURCE_ITEMS)
 if (NOT ZEN_CORE_SOURCE_ITEMS EQUAL 0)
     add_executable(core_test unit_test.cpp ${ZEN_CORE_TESTS})
     target_link_libraries(core_test zen_core Catch2::Catch2)
+
+    # No exceptions here
+    target_compile_definitions(core_test PRIVATE BOOST_NO_EXCEPTIONS)
+    if (MSVC)
+        target_compile_options(core_test PRIVATE /EHa- /EHsc)
+    else ()
+        target_compile_options(core_test PRIVATE -fno-exceptions)
+    endif ()
+
 endif ()
 
-if (MSVC)
-    target_compile_options(core_test PRIVATE /EHa- /EHsc)
-else ()
-    target_compile_options(core_test PRIVATE -fno-exceptions)
-endif ()
 
 if (NOT ZEN_CORE_ONLY)
 

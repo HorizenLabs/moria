@@ -34,14 +34,6 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     add_compile_options(/EHa)           # Enable standard C++ unwinding
     add_compile_options(/await:strict)  # Enable coroutine support in std namespace
 
-    #[[
-    There is an issue on CLion IDE when toolchain is MSVC. Basically it wrongly parses file(line,column) which
-    are meant to point to an error or a warning. Adding the following compile option works around the problem
-    but still has to be considered a temporary solution.
-    https://youtrack.jetbrains.com/issue/CPP-20259?_ga=2.92522975.312527487.1632161219-1027977455.1629393843&_gac=1.251211380.1631446966.CjwKCAjwyvaJBhBpEiwA8d38vIMQB8b0QfoFeQR5Mf4LHU50RFx3CWeeNzVeCrDOr1QcnfCpUPbFTBoCLEYQAvD_BwE
-    ]]
-    #add_compile_options(/diagnostics:classic)
-
     add_compile_options(/wd4127) # Silence warnings about "conditional expression is constant" (abseil mainly)
     add_compile_options(/wd5030) # Silence warnings about GNU attributes
     add_compile_options(/wd4324) # Silence warning C4324: 'xxx': structure was padded due to alignment specifier
@@ -54,6 +46,7 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     # see https://docs.microsoft.com/en-us/cpp/build/reference/zc-cplusplus?view=msvc-160
     add_compile_options(/Zc:__cplusplus)
 
+    add_link_options(/ignore:4075)
     add_link_options(/ignore:4099)
 
     if (CMAKE_BUILD_TYPE MATCHES "Release")

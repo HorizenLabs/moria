@@ -9,8 +9,8 @@
 #include <zen/core/common/base.hpp>
 
 #if defined(BOOST_NO_EXCEPTIONS)
-void boost::throw_exception(const std::exception& ex) {
+void boost::throw_exception(const std::exception&) {
     std::cerr << "Aborted due to unallowed exception" << std::endl;
-    std::abort()
+    std::abort();
 };
 #endif
