@@ -7,6 +7,7 @@
 ]]
 
 message(CHECK_START "Looking for required packages ...")
+find_package(absl CONFIG REQUIRED)
 find_package(CLI11 CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
 
@@ -26,6 +27,7 @@ if(NOT ZEN_NODE_SRC_ITEMS EQUAL 0)
     set(ZEN_NODE_PUBLIC_LIBS zen_core
             mdbx-static
             nlohmann_json::nlohmann_json
+            absl::time
             )
 
     set(ZEN_NODE_PRIVATE_LIBS CLI11::CLI11)

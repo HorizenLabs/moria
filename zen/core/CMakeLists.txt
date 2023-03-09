@@ -9,7 +9,7 @@
 message(CHECK_START "Looking for required packages ...")
 find_package(Microsoft.GSL CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
-find_package(OpenSSL)
+find_package(OpenSSL REQUIRED)
 
 file(GLOB_RECURSE ZEN_CORE_SRC CONFIGURE_DEPENDS "*.cpp" "*.hpp" "*.c" "*.h")
 list(FILTER ZEN_CORE_SRC EXCLUDE REGEX "_test\\.cpp$")
