@@ -6,12 +6,10 @@
 */
 
 #pragma once
-#include <source_location>
 #include <string_view>
 
 namespace zen {
-void abort_due_to_assertion_failure(std::string_view message,
-                                    std::source_location location = std::source_location::current());
+void abort_due_to_assertion_failure(std::string_view message, const char* file, long line);
 }  // namespace zen
 
 //! \brief Always aborts program execution on assertion failure, even when NDEBUG is defined.
@@ -19,4 +17,4 @@ void abort_due_to_assertion_failure(std::string_view message,
     if ((expr)) [[likely]]    \
         static_cast<void>(0); \
     else                      \
-        ::zen::abort_due_to_assertion_failure(#expr, std::source_location::current())
+        ::zen::abort_due_to_assertion_failure(#expr, __FILE__, __LINE__)

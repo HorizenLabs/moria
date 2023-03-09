@@ -4,9 +4,9 @@
    file COPYING or http://www.opensource.org/licenses/mit-license.php.
 */
 
-#include "hash.hpp"
-
 #include <catch2/catch.hpp>
+
+#include <zen/core/types/hash.hpp>
 
 namespace zen {
 

@@ -6,7 +6,7 @@
    file COPYING or http://www.opensource.org/licenses/mit-license.php.
 */
 
-#include <format>
+#include <boost/format.hpp>
 
 #include <zen/core/types/amounts.hpp>
 
@@ -36,7 +36,7 @@ Amount& Amount::operator=(const Amount& rhs) noexcept {
 
 std::string Amount::to_string() const {
     const auto div{std::div(amount_, kCoin)};
-    return std::format("{:d}.{:0>8d} {:s}", div.quot, div.rem, kCurrency);
+    return boost::str(boost::format("%i.%08i %s") % div.quot % div.rem % kCurrency);
 }
 
 void Amount::operator+=(int64_t value) noexcept { amount_ += value; }
@@ -53,10 +53,7 @@ FeeRate::FeeRate(const Amount paid, size_t size) {
     satoshis_per_K_ = size ? static_cast<int64_t>(*paid * 1'000 / size) : 0;
 }
 
-std::string FeeRate::to_string() const {
-    const auto div{std::div(*satoshis_per_K_, kCoin)};
-    return std::format("{:d}.{:0>8d} {:s}/K", div.quot, div.rem, kCurrency);
-}
+std::string FeeRate::to_string() const { return satoshis_per_K_.to_string() + "/K"; }
 Amount FeeRate::fee(size_t bytes_size) const {
     Amount ret(*satoshis_per_K_ * static_cast<int64_t>(bytes_size) / 1'000);
     if (!ret && satoshis_per_K_) ret = satoshis_per_K_;

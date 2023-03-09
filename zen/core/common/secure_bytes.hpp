@@ -12,7 +12,8 @@
 
 #include <boost/noncopyable.hpp>
 
-#include "memory.hpp"
+#include <zen/core/common/memory.hpp>
+
 namespace zen {
 
 //! \brief Custom allocator that ensures allocated memory is wiped out on deallocation and also locked against page-out

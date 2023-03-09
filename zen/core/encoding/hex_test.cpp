@@ -5,8 +5,6 @@
    file COPYING or http://www.opensource.org/licenses/mit-license.php.
 */
 
-#include "hex.hpp"
-
 #include <catch2/catch.hpp>
 
 #include <zen/core/encoding/hex.hpp>

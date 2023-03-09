@@ -5,13 +5,13 @@
    file COPYING or http://www.opensource.org/licenses/mit-license.php.
 */
 
-#include "misc.hpp"
-
-#include <format>
 #include <random>
 #include <regex>
 
 #include <boost/algorithm/string.hpp>
+#include <boost/format.hpp>
+
+#include <zen/core/common/misc.hpp>
 
 namespace zen {
 
@@ -82,8 +82,9 @@ std::string to_string_binary(const size_t input) {
         }
     }
 
-    const uint16_t precision(index ? 2 : 0);
-    return std::format("{:0.{}f} {}", value, precision, suffix[index]);
+    // TODO(C++20/23) Replace with std::format when widely available on GCC and Clang
+    std::string formatter{index ? "%.02f %s" : "%.0f %s"};
+    return boost::str(boost::format(formatter) % value % suffix[index]);
 }
 
 std::string get_random_alpha_string(size_t length) {

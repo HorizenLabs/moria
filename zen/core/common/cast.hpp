@@ -8,7 +8,7 @@
 #pragma once
 #include <cstring>
 
-#include "base.hpp"
+#include <zen/core/common/base.hpp>
 
 // Utilities for type casting
 

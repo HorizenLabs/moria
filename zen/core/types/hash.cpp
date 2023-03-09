@@ -4,9 +4,8 @@
    file COPYING or http://www.opensource.org/licenses/mit-license.php.
 */
 
-#include "hash.hpp"
-
 #include <zen/core/common/endian.hpp>
+#include <zen/core/types/hash.hpp>
 
 namespace zen {
 

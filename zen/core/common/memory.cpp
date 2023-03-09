@@ -5,8 +5,6 @@
    file COPYING or http://www.opensource.org/licenses/mit-license.php.
 */
 
-#include "memory.hpp"
-
 #ifdef __linux__
 #include <unistd.h>
 
@@ -31,6 +29,8 @@
 #include <Psapi.h>
 // clang-format on
 #endif
+
+#include <zen/core/common/memory.hpp>
 
 namespace zen {
 // Inspired by:

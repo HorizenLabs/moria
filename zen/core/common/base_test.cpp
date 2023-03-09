@@ -5,9 +5,9 @@
    file COPYING or http://www.opensource.org/licenses/mit-license.php.
 */
 
-#include "base.hpp"
-
 #include <catch2/catch.hpp>
+
+#include <zen/core/common/base.hpp>
 
 namespace zen {
 

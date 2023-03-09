@@ -4,11 +4,10 @@
    file COPYING or http://www.opensource.org/licenses/mit-license.php.
 */
 
-#include "secure_bytes.hpp"
-
 #include <catch2/catch.hpp>
 
-#include "base.hpp"
+#include <zen/core/common/base.hpp>
+#include <zen/core/common/secure_bytes.hpp>
 
 namespace zen {
 TEST_CASE("Secure Bytes", "[memory]") {
