@@ -5,10 +5,10 @@
    file COPYING or http://www.opensource.org/licenses/mit-license.php.
 */
 
-#include "hex.hpp"
-
 #include <array>
 #include <ranges>
+
+#include <zen/core/encoding/hex.hpp>
 
 namespace zen::hex {
 

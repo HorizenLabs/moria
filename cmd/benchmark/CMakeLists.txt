@@ -5,7 +5,7 @@
    file COPYING or http://www.opensource.org/licenses/mit-license.php.
 ]]
 
-find_package(benchmark REQUIRED)
+find_package(benchmark CONFIG REQUIRED)
 
 # Zen Core Benchmarks
 message(STATUS "Looking for benchmarks ... ${ZEN_MAIN_SRC_DIR}/core/*_benchmark.cpp")

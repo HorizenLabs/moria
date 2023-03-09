@@ -39,7 +39,7 @@ $ git submodule update --init --recursive
 ## Building on Linux & MacOS
 
 Ensure you have the following requirements installed :
-- C++20 compatible compiler with support for std::format: [GCC](https://www.gnu.org/software/gcc/) >= 13 or [Clang](https://clang.llvm.org/) >= 14
+- C++20 compatible compiler: [GCC](https://www.gnu.org/software/gcc/) >= 12 or [Clang](https://clang.llvm.org/) >= 13
 - [CMake] >= 3.16.12
 - [Perl](https://www.perl.org/) >= 5.x
 
@@ -133,7 +133,7 @@ will be compiled as part of the testing or the benchmarking suite respectively.
 We use standard C++20 programming language.
 We adhere to [Google's C++ Style Guide] with the following differences:
 - C++20 rather than C++17
-- `snake_case()` for function and variable names
+- `snake_case()` for function and variable names (ISO)
 - `member_variable_` names must have underscore suffix
 - prefixing variable names with meaningful types (e.g `vector<char> vChar{}`) is highly discouraged
 - classes and struct names must be in Pascal Case (`class FancyFoo`)

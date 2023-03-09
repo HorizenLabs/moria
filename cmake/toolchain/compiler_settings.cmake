@@ -70,11 +70,12 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 
 elseif ("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
 
-    # Require at least GCC 11
-    if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 13.0.0)
+    # Require at least GCC 12
+    # see https://en.cppreference.com/w/cpp/compiler_support
+    if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 12)
         message(FATAL_ERROR
                 "\n===================================\n"
-                "GCC Version must be at least 13"
+                " Required GCC version >= 12"
                 "\n===================================\n"
                 )
     endif ()
@@ -90,11 +91,12 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
 
 elseif ("${CMAKE_CXX_COMPILER_ID}" MATCHES ".*Clang$")
 
-    # Require at least Clang 14
-    if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 14.0)
+    # Require at least Clang 13
+    # see https://en.cppreference.com/w/cpp/compiler_support
+    if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 13)
         message(FATAL_ERROR
                 "\n===================================\n"
-                "Clang Version must be at least 14"
+                " Required Clang version >= 12"
                 "\n===================================\n"
                 )
     endif ()

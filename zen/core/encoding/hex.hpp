@@ -9,10 +9,10 @@
 
 #include <string_view>
 
-#include <zen/core/common/base.hpp>
+#include <tl/expected.hpp>
 
-#include "errors.hpp"
-#include "tl/expected.hpp"
+#include <zen/core/common/base.hpp>
+#include <zen/core/encoding/errors.hpp>
 
 namespace zen::hex {
 

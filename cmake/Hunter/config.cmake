@@ -16,6 +16,15 @@ hunter_cmake_args(
         ABSL_RUN_TESTS=OFF
 )
 
+# Avoid -Werror to overcome GCC 12.1.0 bug breaking Google Benchmark build
+# https://github.com/google/benchmark/issues/1398
+# https://gcc.gnu.org/bugzilla/show_bug.cgi?id=105329
+hunter_config(
+        benchmark
+        VERSION 1.6.1
+        CMAKE_ARGS BENCHMARK_ENABLE_WERROR=OFF
+)
+
 hunter_config(
         Boost
         URL https://boostorg.jfrog.io/artifactory/main/release/1.81.0/source/boost_1_81_0.tar.bz2
