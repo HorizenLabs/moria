@@ -58,11 +58,11 @@ following variables before invoking cmake
 ```shell
 $ export CC=/usr/bin/clang
 $ export CXX=/usr/bin/clang++
-$ cmake [-DCMAKE_BUILD_TYPE="[Debug|Release|RelWithDebInfo|MinSizeRel]"]..
+$ cmake [-DCMAKE_BUILD_TYPE="[Debug|Release|RelWithDebInfo|MinSizeRel]"] ..
 ```
 **Important** Should you already have built with GCC earlier remember do erase the `build` directory and re-create it.
 
-Additional CMAKE options (specify with `-D<OPTION_NAME:bool>=ON`):
+Additional CMAKE options (specify with `-D<OPTION_NAME[:type]>=<value>`):
 
 | OPTION_NAME          | Description                                        | Default |
 |:---------------------|:---------------------------------------------------|:-------:|

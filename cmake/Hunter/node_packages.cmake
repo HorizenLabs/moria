@@ -7,5 +7,5 @@
 ]]
 
 hunter_add_package(abseil)
-hunter_add_package(Boost COMPONENTS container thread)
+hunter_add_package(Boost COMPONENTS headers)
 hunter_add_package(CLI11)

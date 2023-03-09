@@ -50,7 +50,7 @@ void Amount::operator++() noexcept { ++amount_; }
 void Amount::operator--() noexcept { --amount_; }
 
 FeeRate::FeeRate(const Amount paid, size_t size) {
-    satoshis_per_K_ = size ? static_cast<int64_t>(*paid * 1'000 / size) : 0;
+    satoshis_per_K_ = size ? *paid * 1'000L / static_cast<int64_t>(size) : 0;
 }
 
 std::string FeeRate::to_string() const { return satoshis_per_K_.to_string() + "/K"; }

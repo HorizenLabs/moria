@@ -9,7 +9,7 @@
 #include <string_view>
 
 namespace zen {
-void abort_due_to_assertion_failure(std::string_view message, const char* file, long line);
+[[noreturn]] void abort_due_to_assertion_failure(std::string_view message, const char* file, long line);
 }  // namespace zen
 
 //! \brief Always aborts program execution on assertion failure, even when NDEBUG is defined.

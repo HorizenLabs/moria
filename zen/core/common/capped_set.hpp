@@ -17,7 +17,7 @@ namespace zen {
 //! \remark Not thread safe
 template <typename T>
 class CappedSet {
-    using iterator_t = std::unordered_set<T>::iterator;
+    using iterator_t = typename std::unordered_set<T>::iterator;
 
   public:
     explicit CappedSet(const size_t capacity) : capacity_{capacity} {

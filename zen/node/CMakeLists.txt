@@ -7,8 +7,6 @@
 ]]
 
 message(CHECK_START "Looking for required packages ...")
-find_package(absl CONFIG REQUIRED)
-find_package(Boost CONFIG REQUIRED container thread)
 find_package(CLI11 CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
 
@@ -27,9 +25,7 @@ if(NOT ZEN_NODE_SRC_ITEMS EQUAL 0)
 
     set(ZEN_NODE_PUBLIC_LIBS zen_core
             mdbx-static
-            absl::flat_hash_map absl::flat_hash_set absl::btree
             nlohmann_json::nlohmann_json
-            Boost::container
             )
 
     set(ZEN_NODE_PRIVATE_LIBS CLI11::CLI11)

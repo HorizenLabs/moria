@@ -23,6 +23,11 @@
 #define ZEN_THREAD_LOCAL thread_local
 #endif
 
+#if defined(BOOST_NO_EXCEPTIONS)
+#include <boost/throw_exception.hpp>
+void boost::throw_exception(const std::exception& ex);
+#endif
+
 namespace zen {
 
 using BlockNum = uint32_t;
