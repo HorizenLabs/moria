@@ -10,6 +10,7 @@ C++ Implementation of ZEN node based on Thorax Architecture
 - [Building on Windows](#building-on-windows)
 - [Tree Map](#tree-map)
 - [Style Guide](#style-guide)
+- Go to [Documentation](./doc)
 
 [CMake]: http://cmake.org
 [Google's C++ Style Guide]: https://google.github.io/styleguide/cppguide.html
@@ -106,12 +107,14 @@ Alternatively you can use [VSCode] or [CLion]
 
 For Visual Studio setups follow this instructions:
 - Ensure you've cloned the project just as described [here](#obtaining-source-code)
-- Open Visual Studio and select File -> Cmake...
+- Open Visual Studio and select File -> Open -> Cmake...
 - Browse the folder where you have cloned this repository and select the file CMakeLists.txt
 - Let CMake cache generation complete : on first run this may take several minutes, depending on your hardware and internet connection capabilities,  as it will download and build additional components like, for example, Boost library.
 - Solution explorer shows the project tree.
 - To build simply `CTRL+Shift+B`
 - Build files, libraries and executable binaries are written to `"${projectDir}\build\` If you want to change this path simply edit `CMakeSettings.json` file and choose an output directory which does not pollute the source directory tree (e.g. `%USERPROFILE%\.cmake-builds\${projectName}\`)
+
+*We've deliberately chosen to force cmake generator to `Visual Studio 17 2022 Win64` even if it might result being slower than `Ninja`: fact is [Boost](https://www.boost.org/) libraries fail to build properly on windows using Ninja generator.*
 
 ### Memory compression on Windows 10/11
 
