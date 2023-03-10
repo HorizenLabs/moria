@@ -7,7 +7,10 @@
 */
 
 #pragma once
+#include <tl/expected.hpp>
+
 #include <zen/core/common/base.hpp>
+#include <zen/core/encoding/errors.hpp>
 
 namespace zen {
 
@@ -18,6 +21,13 @@ class Amount {
     explicit Amount(int64_t value) : amount_{value} {};
 
     Amount(const Amount& other) = default;
+
+    static constexpr int64_t kMax{kCoinMaxSupply * kCoin};
+
+    //! \brief Parses an amount expressed in token denomination (e.g. 1.0458)
+    //! \remarks Should the input not match the boundaries of Amount or not honors the valid_money() test
+    //! then an unexpected DecodingError is returned
+    static tl::expected<Amount, DecodingError> parse(const std::string& input);
 
     [[nodiscard]] bool valid_money() const noexcept;
     explicit operator bool() const noexcept;

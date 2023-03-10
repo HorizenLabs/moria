@@ -58,7 +58,7 @@ tl::expected<Bytes, DecodingError> decode(std::string_view input) noexcept {
     const auto maxlen{input.size() / 4 * 3 + 1};
     Bytes ret(maxlen, '\0');
     const auto effective_len{BIO_read(b64.get(), ret.data(), static_cast<int>(maxlen))};
-    if (effective_len <= 0) return tl::unexpected(DecodingError::kInvalidInput);
+    if (effective_len <= 0) return tl::unexpected(DecodingError::kInvalidBase64Input);
     ret.resize(static_cast<std::string::size_type>(effective_len));
     return ret;
 }

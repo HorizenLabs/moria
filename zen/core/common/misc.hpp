@@ -6,9 +6,12 @@
 */
 
 #pragma once
+#include <thread>
+
 #include <tl/expected.hpp>
 
 #include <zen/core/common/base.hpp>
+#include <zen/core/encoding/errors.hpp>
 
 namespace zen {
 
@@ -17,11 +20,11 @@ namespace zen {
 [[nodiscard]] std::string abridge(std::string_view input, size_t length);
 
 //! \brief Parses a string input value representing a size in human-readable format with qualifiers. eg "256MB"
-[[nodiscard]] tl::expected<uint64_t, std::string> parse_binary_size(const std::string& input);
+[[nodiscard]] tl::expected<uint64_t, DecodingError> parse_human_bytes(const std::string& input);
 
 //! \brief Transforms a size value into it's decimal string representation with binary suffix
 //! \see https://en.wikipedia.org/wiki/Binary_prefix
-std::string to_string_binary(size_t input);
+std::string to_human_bytes(size_t input);
 
 //! \brief Builds a randomized string of alpha num chars (lowercase) of arbitrary length
 std::string get_random_alpha_string(size_t length);

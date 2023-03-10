@@ -14,11 +14,11 @@
 
 namespace zen {
 
-TEST_CASE("parse_binary_size", "[misc]") {
-    auto parsed = parse_binary_size("");
+TEST_CASE("Parse Human Bytes", "[misc]") {
+    auto parsed = parse_human_bytes("");
     CHECK((parsed && *parsed == 0));
 
-    parsed = parse_binary_size("not a number");
+    parsed = parse_human_bytes("not a number");
     CHECK_FALSE(parsed);
 
     static_assert(kKibi == 1024ULL);
@@ -27,20 +27,20 @@ TEST_CASE("parse_binary_size", "[misc]") {
     static_assert(kTebi == 1024ULL * 1024ULL * 1024ULL * 1024ULL);
 
     const std::vector<std::pair<std::string, uint64_t>> tests{
-        {"128", 128},          //
-        {"128B", 128},         //
-        {"180", 180},          //
-        {"640KB", 640_Kibi},   //
-        {"640 KB", 640_Kibi},  //
-        {"750 MB", 750_Mebi},  //
-        {"400GB", 400_Gibi},   //
-        {"2TB", 2_Tebi},       //
-        {".5TB", 512_Gibi},    //
-        {"0.5 TB", 512_Gibi}   //
+        {"128", 128},           //
+        {"128B", 128},          //
+        {"180", 180},           //
+        {"640KB", 640_Kibi},    //
+        {"640 KB", 640_Kibi},   //
+        {"750 MB", 750_Mebi},   //
+        {"400GB", 400_Gibi},    //
+        {"2TB", 2_Tebi},        //
+        {".5TB", 1_Tebi / 2},   //
+        {"0.5 TB", 1_Tebi / 2}  //
     };
 
     for (const auto& [input, expected] : tests) {
-        const auto value = parse_binary_size(input);
+        const auto value = parse_human_bytes(input);
         CHECK((value && *value == expected));
     }
 }
@@ -57,7 +57,7 @@ TEST_CASE("to_string_binary", "[misc]") {
     };
 
     for (const auto& [val, expected] : tests) {
-        CHECK(to_string_binary(val) == expected);
+        CHECK(to_human_bytes(val) == expected);
     }
 }
 

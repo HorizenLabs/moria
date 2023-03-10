@@ -75,7 +75,7 @@ static inline mdbx::cursor::move_operation move_operation(CursorMoveDirection di
     // Opening would not fail but only a part of data would be mapped.
     if (db_ondisk_file_size > config.max_size) {
         throw std::ios_base::failure("Database map size is too small. Min required " +
-                                     to_string_binary(db_ondisk_file_size));
+                                     to_human_bytes(db_ondisk_file_size));
     }
 
     uint32_t flags{MDBX_NOTLS | MDBX_NORDAHEAD | MDBX_COALESCE | MDBX_SYNC_DURABLE};  // Default flags
@@ -131,7 +131,7 @@ static inline mdbx::cursor::move_operation move_operation(CursorMoveDirection di
         throw std::length_error(
             "Incompatible page size. "
             "Requested " +
-            to_string_binary(config.page_size) + " db has " + to_string_binary(db_page_size));
+            to_human_bytes(config.page_size) + " db has " + to_human_bytes(db_page_size));
     }
 
     if (!config.shared) {

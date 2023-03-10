@@ -23,54 +23,49 @@ std::string abridge(std::string_view input, size_t length) {
     return std::string(input.substr(0, length)) + "...";
 }
 
-tl::expected<uint64_t, std::string> parse_binary_size(const std::string& input) {
+tl::expected<uint64_t, DecodingError> parse_human_bytes(const std::string& input) {
     if (input.empty()) {
         return 0ULL;
     }
 
-    static const std::regex pattern{R"(^(\d*)(\.\d{1,3})?\ *?(B|KB|MB|GB|TB)?$)", std::regex_constants::icase};
+    static const std::regex pattern{R"(^(\d{0,10})(\.\d{1,3})?\ *?(B|KB|MB|GB|TB)?$)", std::regex_constants::icase};
     std::smatch matches;
     if (!std::regex_search(input, matches, pattern, std::regex_constants::match_default)) {
-        return tl::unexpected{"Not a recognized numeric input"};
+        return tl::unexpected{DecodingError::kInvalidInput};
     }
-
-    std::string int_part;
-    std::string dec_part;
-    std::string suf_part;
 
     uint64_t multiplier{1};  // Default for bytes (B|b)
 
-    int_part = matches[1].str();
-    if (!matches[2].str().empty()) {
-        dec_part = matches[2].str().substr(1);
-    }
-    suf_part = matches[3].str();
-
-    if (!suf_part.empty()) {
-        if (boost::iequals(suf_part, "KB")) {
-            multiplier = kKibi;
-        } else if (boost::iequals(suf_part, "MB")) {
-            multiplier = kMebi;
-        } else if (boost::iequals(suf_part, "GB")) {
-            multiplier = kGibi;
-        } else if (boost::iequals(suf_part, "TB")) {
-            multiplier = kTebi;
-        }
+    std::string whole_part{matches[1].str()};
+    std::string fract_part{matches[2].str()};
+    std::string suffix{matches[3].str()};
+    if (!fract_part.empty()) {
+        fract_part.erase(fract_part.begin());
     }
 
-    auto number{std::strtoull(int_part.c_str(), nullptr, 10)};
-    number *= multiplier;
-    if (!dec_part.empty()) {
+    if (boost::iequals(suffix, "KB")) {
+        multiplier = kKibi;
+    } else if (boost::iequals(suffix, "MB")) {
+        multiplier = kMebi;
+    } else if (boost::iequals(suffix, "GB")) {
+        multiplier = kGibi;
+    } else if (boost::iequals(suffix, "TB")) {
+        multiplier = kTebi;
+    }
+
+    auto value{std::strtoull(whole_part.c_str(), nullptr, 10)};
+    value *= multiplier;
+    if (!fract_part.empty()) {
         // Use literals, so we don't deal with floats and doubles
-        auto base{"1" + std::string(dec_part.size(), '0')};
+        auto base{"1" + std::string(fract_part.size(), '0')};
         auto b{std::strtoul(base.c_str(), nullptr, 10)};
-        auto d{std::strtoul(dec_part.c_str(), nullptr, 10)};
-        number += multiplier * d / b;
+        auto d{std::strtoul(fract_part.c_str(), nullptr, 10)};
+        value += multiplier * d / b;
     }
-    return number;
+    return value;
 }
 
-std::string to_string_binary(const size_t input) {
+std::string to_human_bytes(const size_t input) {
     static const char* suffix[]{"B", "KB", "MB", "GB", "TB"};
     static const uint32_t items{sizeof(suffix) / sizeof(suffix[0])};
     uint32_t index{0};
