@@ -8,7 +8,7 @@ C++ Implementation of ZEN node based on Thorax Architecture
 - [Obtaining source code](#obtaining-source-code)
 - [Building on Linux & MacOS](#building-on-linux--macos)
 - [Building on Windows](#building-on-windows)
-- [Codemap](#codemap)
+- [Tree Map](#tree-map)
 - [Style Guide](#style-guide)
 
 [CMake]: http://cmake.org
@@ -17,6 +17,7 @@ C++ Implementation of ZEN node based on Thorax Architecture
 [Visual Studio]: https://www.visualstudio.com/downloads
 [VSCode]: https://www.visualstudio.com/downloads
 [CLion]: https://www.jetbrains.com/clion/download/
+[submodules]: https://git-scm.com/book/en/v2/Git-Tools-Submoduleshttps://git-scm.com/book/en/v2/Git-Tools-Submodules
 
 ## About Moria
 
@@ -27,19 +28,19 @@ This project is under active development and hasn't reached the alpha phase yet.
 
 ## Obtaining Source Code
 
-To obtain Moria's source code for the first time you need to install git on your computer and
+To obtain the source code for the first time you need to install [Git](https://git-scm.com/) on your computer and
 ```shell
 $ git clone --recurse-submodules https://github.com/HorizenLabs/moria.git
 $ cd moria
 ```
-Moria uses a some git submodules (which may eventually have their own submodules) : so after you've updated to the latest code with `git pull` remember to also update submodules with
+We use some git [submodules] (which may eventually have their own submodules) : so after you've updated to the latest code with `git pull` remember to also update [submodules] with
 ```shell
 $ git submodule update --init --recursive
 ```
 ## Building on Linux & MacOS
 
 Ensure you have the following requirements installed :
-- C++20 compatible compiler: [GCC](https://www.gnu.org/software/gcc/) >= 12 or [Clang](https://clang.llvm.org/) >= 13
+- C++20 compatible compiler and its support libraries: [GCC](https://www.gnu.org/software/gcc/) >= 12 or [Clang](https://clang.llvm.org/) >= 13 (see [here](https://en.cppreference.com/w/cpp/compiler_support) the compatibility matrix)
 - [CMake] >= 3.16.12
 - [Perl](https://www.perl.org/) >= 5.x
 
@@ -73,7 +74,7 @@ Additional CMAKE options (specify with `-D<OPTION_NAME[:type]>=<value>`):
 
 Then run the build itself
 ```shell
-make -j
+$ make -j
 ```
 _Note about parallel builds using `-j`: if not specified the exact number of parallel tasks, the compiler will spawn as many
 as the cores available. That may cause OOM errors if the build is executed on a host with a large number of cores but a relatively
@@ -86,12 +87,17 @@ Now you can run the unit tests (if you have chosen to build them. There's one fo
 $ ./cmd/test/core_test
 $ ./cmd/test/node_test
 ```
+Along with tests also benchmarks are built. If you want to play with them run
+```shell
+$ ./cmd/benckmark/core_benchmarks
+$ ./cmd/benchmark/node_benchmarks
+```
 
 ## Building on Windows
 **Note! Native Windows builds are maintained for compatibility/portability reasons.
-However, due to the lack of 128-bit integers support by MSVC, execution performance may be impacted when compared to *nix builds.**
+However, due to the lack of 128-bit integers support by MSVC, execution performance may be slightly impacted when compared to *nix builds.**
 
-To be able to build Moria on Windows you have to ensure the following requirements are installed
+To be able to build on Windows you have to ensure the following requirements are installed
 - [Visual Studio] Build Tools >= 2019 16.9.2 : ensure your setup includes CMake support and Windows 10 SDK 
 - Perl Language : either [Strawberry Perl](https://strawberryperl.com/) or [Active State Perl](https://www.activestate.com/products/perl/) are fine
 
@@ -99,12 +105,13 @@ If you're willing to use [Visual Studio] (Community Edition is fine) as your pri
 Alternatively you can use [VSCode] or [CLion]
 
 For Visual Studio setups follow this instructions:
+- Ensure you've cloned the project just as described [here](#obtaining-source-code)
 - Open Visual Studio and select File -> Cmake...
 - Browse the folder where you have cloned this repository and select the file CMakeLists.txt
 - Let CMake cache generation complete : on first run this may take several minutes, depending on your hardware and internet connection capabilities,  as it will download and build additional components like, for example, Boost library.
 - Solution explorer shows the project tree.
 - To build simply `CTRL+Shift+B`
-- Binaries are written to `%USERPROFILE%\CMakeBuilds\moria\build` If you want to change this path simply edit `CMakeSettings.json` file.
+- Build files, libraries and executable binaries are written to `"${projectDir}\build\` If you want to change this path simply edit `CMakeSettings.json` file and choose an output directory which does not pollute the source directory tree (e.g. `%USERPROFILE%\.cmake-builds\${projectName}\`)
 
 ### Memory compression on Windows 10/11
 
@@ -115,32 +122,45 @@ Use the following steps to detect/enable/disable memory compression:
 * To disable memory compression : `Disable-MMAgent -mc` and reboot
 * To enable memory compression : `Enable-MMAgent -mc` and reboot
 
-## Codemap
-Apart from the submodules and some auxiliary directories, Moria contains the following components:
-* [`cmd`](./cmd)
-  <br /> The source code of Moria's executable binaries.
+## Tree Map
+This projects contains the following directory components:
+* [`cmake`](./cmake)
+  <br /> Where main cmake components are stored. Generally you don't need to edit anything there.
+* [`cmd`](./cmd) 
+  <br /> The basic source code of project's executable binaries (daemon and support tools).
+  <br /> Nothing in this directory gets built when you choose the `ZEN_CORE_ONLY` build option
+* [`doc`](./doc)
+  <br /> The documentation area. No source code is allowed here
+* [`third-party`](./third-party)
+  <br /> Where most of the dependencies of the project are stored. Some directories may be bound to [submodules] while other may contain imported code.
 * [`zen/core`](./zen/core)
   <br /> This module contains the heart of the Zen protocol logic.
-  Source code within `core` is compatible with WebAssembly and cannot use C++ exceptions.
+  Source code within `core` is suitable for export (as a library) to third-party applications and cannot make use of C++ exceptions (build flags explicitly voids them)
 * [`zen/node`](./zen/node)
   <br /> This module contains the database, the staged sync loop and other logic necessary to function as a Zen node.
   This module depends on the `core` module.
 
-With reference to zen's modules subdirectories all files which name ends in `_test.[c|h]pp` or `_benchmark.[c|h]pp` (note the underscore) 
-will be compiled as part of the testing or the benchmarking suite respectively.
+To simplify the building process cmake is configured to make use of GLOB lists of files. As a result a strict naming convention of files (see [Style Guide](#style-guide)).
+In addition to that we establish two file names suffix (before extension) reservations:
+* `_test` explicitly mark a file to be included in the unit tests target
+* `_benchmark` explicitly mark a file to be included in the benchmarks target
 
 ## Style guide
 We use standard C++20 programming language.
 We adhere to [Google's C++ Style Guide] with the following differences:
-- C++20 rather than C++17
+- `C++20` rather than `C++17`
+- `snake_case` for source and header file names (ISO) 
 - `snake_case()` for function and variable names (ISO)
 - `member_variable_` names must have underscore suffix
-- prefixing variable names with meaningful types (e.g `vector<char> vChar{}`) is highly discouraged
+- prefixing variable names with initial abbreviation of underlying type (e.g `vector<char> vChar{}`) is highly discouraged
 - classes and struct names must be in Pascal Case (`class FancyFoo`)
 - prefer `using` instead of `typedef`
 - `.cpp/.hpp` file extensions for C++ : `.c/.h` are reserved for C
 - `using namespace foo` is allowed into source files (`.cpp`) but not inside headers
-- Exceptions are allowed **outside** the `core` library
+- Exceptions are allowed **only outside** the `core` library
 - User-defined literals are allowed
 - Maximum line length is 120, indentation is 4 spaces - see [.clang-format](.clang-format)
 - Use `#pragma once` in the headers instead of the classic `#ifndef` guards.
+- Comments MUST adhere to Doxygen formats (excluding inline ones)
+
+Developers willing to contribute are strongly encouraged to take a thorough read of [this best practices about naming and layout](https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#nl-naming-and-layout-suggestions)
