@@ -6,5 +6,5 @@
    file COPYING or http://www.opensource.org/licenses/mit-license.php.
 ]]
 
-include(${CMAKE_CURRENT_LIST_DIR}/base.cmake)
 set(CMAKE_CXX_STANDARD 20)
+include(${CMAKE_CURRENT_LIST_DIR}/base.cmake)
