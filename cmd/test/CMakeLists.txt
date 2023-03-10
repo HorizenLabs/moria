@@ -35,8 +35,6 @@ if (NOT ZEN_CORE_ONLY)
     if (NOT ZEN_NODE_SOURCE_ITEMS EQUAL 0)
         add_executable(node_test unit_test.cpp ${ZEN_NODE_TESTS})
         target_link_libraries(node_test zen_node Catch2::Catch2)
-        get_target_property(OUT node_test LINK_LIBRARIES)
-        message(STATUS ${OUT})
     endif ()
 
 endif ()

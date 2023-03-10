@@ -23,7 +23,7 @@
 #include <sys/mman.h>
 #endif
 
-#ifdef _WINDOWS
+#if defined(_WIN32) || defined(_WIN64)
 // clang-format off
 #include <windows.h>
 #include <Psapi.h>
@@ -61,7 +61,7 @@ size_t get_mem_usage(bool resident) {
     task_info(current_task(), TASK_BASIC_INFO, reinterpret_cast<task_info_t>(&t_info), &t_info_count);
     ret = (resident ? t_info.resident_size : t_info.virtual_size);
 
-#elif defined(_WINDOWS)
+#elif defined(_WIN32) || defined(_WIN64)
     static HANDLE phandle{GetCurrentProcess()};
     PROCESS_MEMORY_COUNTERS_EX counters;
     if (K32GetProcessMemoryInfo(phandle, (PROCESS_MEMORY_COUNTERS*)&counters, sizeof(counters))) {
@@ -76,7 +76,7 @@ size_t get_mem_usage(bool resident) {
 
 size_t get_system_page_size() {
     size_t ret{0};
-#if defined(WIN32)
+#if defined(_WIN32) || defined(_WIN64)
     SYSTEM_INFO systemInfo;
     GetSystemInfo(&systemInfo);
     ret = systemInfo.dwPageSize;

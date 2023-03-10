@@ -1,8 +1,9 @@
-build*
-xcode
-*.code-workspace
 .idea
 .vscode
 .vs
-CMakeFiles
+*.code-workspace
+build*
 cmake-build-*
+out
+xcode
+CMakeFiles

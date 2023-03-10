@@ -9,8 +9,11 @@
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 
     if (MSVC_VERSION LESS_EQUAL 1928)
-        message(FATAL_ERROR "Your MSVC version is too low."
-                "Please update your Visual Studio to at least release 2019 16.9.2")
+        message(FATAL_ERROR
+                "\n============================================\n"
+                " Required MSVC version >= 1928 (2019 16.9.2)"
+                "\n============================================\n"
+                )
     endif ()
 
 
@@ -22,7 +25,7 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 
     # LINK : fatal error LNK1104: cannot open file 'libboost_date_time-vc142-mt-x64-1_72.lib
     # is solved by this (issue only for MVC)
-    # add_definitions(-DBOOST_DATE_TIME_NO_LIB)
+    add_definitions(-DBOOST_ALL_NO_LIB)
 
     # Abseil triggers some deprecation warnings
     add_compile_definitions(_SILENCE_CXX17_OLD_ALLOCATOR_MEMBERS_DEPRECATION_WARNING)
