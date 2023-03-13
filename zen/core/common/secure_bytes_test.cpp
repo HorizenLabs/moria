@@ -11,17 +11,18 @@
 
 namespace zen {
 TEST_CASE("Secure Bytes", "[memory]") {
-    uint8_t* ptr{nullptr};
+    intptr_t ptr{0};
     {
         SecureBytes secure_bytes(4_Kibi, '\0');
-        ptr = secure_bytes.data();
+        ptr = reinterpret_cast<intptr_t>(&secure_bytes);
         secure_bytes[0] = 'a';
         secure_bytes[1] = 'b';
         secure_bytes[2] = 'c';
-        CHECK(ptr[0] == 'a');
         CHECK_FALSE(LockedPagesManager::instance().empty());
     }
     CHECK(LockedPagesManager::instance().empty());
-    CHECK(ptr[0] != 'a');
+    CHECK_FALSE(LockedPagesManager::instance().contains(ptr));
+    uint8_t* data = reinterpret_cast<uint8_t*>(ptr);
+    CHECK((data[0] != 'a' && data[1] != 'b' && data[2] != 'c'));
 }
 }  // namespace zen

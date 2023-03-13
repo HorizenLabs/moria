@@ -105,7 +105,7 @@ inline void write_compact(Stream& s, uint64_t obj) {
 template <typename T, class Stream>
 requires std::is_integral_v<T>
 inline tl::expected<T, DeserializationError> read_data(Stream& s) {
-    T ret{};
+    T ret{0};
     const uint32_t count{ser_sizeof(ret)};
     const auto read_result{s.read(count)};
     if (!read_result) return tl::unexpected(read_result.error());

@@ -152,6 +152,9 @@ TEST_CASE("Serialization of base types", "[serialization]") {
             CHECK(value);
             CHECK(*value == i);
         }
+
+        // Should be consumed entirely
+        CHECK(stream.eof());
     }
 
     SECTION("Non Canonical Compact", "[serialization]") {
