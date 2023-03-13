@@ -48,6 +48,28 @@ static constexpr std::array<uint8_t, 256> kUnhexTable4{
 
 // clang-format on
 
+std::string reverse_hex(std::string_view input) noexcept {
+    if (input.empty()) return {};
+
+    std::string output;
+    output.reserve(input.length());
+    if (has_prefix(input)) {
+        output += "0x";
+        input.remove_prefix(2);
+    }
+
+    while (input.size() >= 2) {
+        output.append(input.substr(input.size() - 2));
+        input.remove_suffix(2);
+    }
+    if (!input.empty()) [[unlikely]] {
+        output.push_back('0');
+        output.push_back(input.back());
+    }
+
+    return output;
+}
+
 ByteView zeroless_view(ByteView data) {
     const auto first_not_zero = std::ranges::find_if_not(data, [](const auto b) { return b == 0x0; });
     if (first_not_zero == data.end()) return {};  // An empty string

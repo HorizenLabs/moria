@@ -6,9 +6,25 @@
 */
 
 #pragma once
+#include <bit>
+#include <concepts>
+#include <ranges>
+
 #include <zen/core/common/base.hpp>
 
 namespace zen::endian {
+
+// TODO(C++23) replace with std::byteswap from <bits> header
+//! \brief Reverses the bytes for given integer value
+template <std::integral T>
+constexpr T byte_swap(T value) {
+    static_assert(std::has_unique_object_representations_v<T>, "T may not have padding bits");
+    Bytes buffer(sizeof(T), 0);
+    std::memcpy(buffer.data(), &value, sizeof(T));
+    std::ranges::reverse(buffer);
+    std::memcpy(&value, buffer.data(), sizeof(T));
+    return value;
+}
 
 // Similar to boost::endian::load_big_u16
 const auto load_big_u16 = intx::be::unsafe::load<uint16_t>;

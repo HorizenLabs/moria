@@ -34,7 +34,7 @@ using BlockNum = uint32_t;
 
 template <class T>
 concept UnsignedIntegral = std::unsigned_integral<T> || std::same_as<T, intx::uint128> ||
-                           std::same_as<T, intx::uint256> || std::same_as<T, intx::uint512>;
+    std::same_as<T, intx::uint256> || std::same_as<T, intx::uint512>;
 
 inline constexpr size_t kHashLength{32};  // Length (in bytes) of a hash
 
@@ -74,10 +74,10 @@ constexpr uint64_t operator"" _Mebi(unsigned long long x) { return x * kMebi; }
 constexpr uint64_t operator"" _Gibi(unsigned long long x) { return x * kGibi; }
 constexpr uint64_t operator"" _Tebi(unsigned long long x) { return x * kTebi; }
 
-static constexpr int64_t kCoinMaxDecimals = 8;                 // Max number of denomination decimals
-static constexpr int64_t kCoin = 100'000'000;                  // As many zeroes as kCoinMaxDecimals
-static constexpr int64_t kCoinCent = kCoin / 100;              // One coin cent
-static constexpr int64_t kCoinMaxSupply = 21'000'000;          // Max tokens supply
+static constexpr int64_t kCoinMaxDecimals = 8;         // Max number of denomination decimals
+static constexpr int64_t kCoin = 100'000'000;          // As many zeroes as kCoinMaxDecimals
+static constexpr int64_t kCoinCent = kCoin / 100;      // One coin cent
+static constexpr int64_t kCoinMaxSupply = 21'000'000;  // Max tokens supply
 static constexpr std::string_view kCurrency{"ZEN"};
 
 }  // namespace zen

@@ -23,6 +23,9 @@ inline bool has_prefix(std::string_view source) {
     return source.length() >= 2 && source[0] == '0' && (source[1] == 'x' || source[1] == 'X');
 }
 
+//! \brief Reverses an hex string
+[[nodiscard]] std::string reverse_hex(std::string_view input) noexcept;
+
 //! \brief Strips leftmost zeroed bytes from byte sequence
 //! \param [in] data : The view to process
 //! \return A new view of the sequence

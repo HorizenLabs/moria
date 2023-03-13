@@ -8,6 +8,7 @@
 #include <catch2/catch.hpp>
 
 #include <zen/core/common/endian.hpp>
+#include <zen/core/encoding/hex.hpp>
 
 namespace zen::endian {
 
@@ -62,6 +63,14 @@ TEST_CASE("64 bit", "[endianness]") {
 
     uint64_t le{load_little_u64(bytes)};
     CHECK(le == 0xf0debc9a78563412);
+}
+
+TEST_CASE("Byte swapping", "[endianness]") {
+    uint64_t value{0x123456789abcdef0};
+    CHECK(hex::encode(value, true) == "0x123456789abcdef0");
+    auto value_swapped = byte_swap(value);
+    CHECK(hex::encode(value_swapped, true) == "0xf0debc9a78563412");
+    CHECK(hex::reverse_hex(hex::encode(value, true)) == "0xf0debc9a78563412");
 }
 
 }  // namespace zen::endian

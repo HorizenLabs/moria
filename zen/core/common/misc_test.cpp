@@ -27,16 +27,18 @@ TEST_CASE("Parse Human Bytes", "[misc]") {
     static_assert(kTebi == 1024ULL * 1024ULL * 1024ULL * 1024ULL);
 
     const std::vector<std::pair<std::string, uint64_t>> tests{
-        {"128", 128},           //
-        {"128B", 128},          //
-        {"180", 180},           //
-        {"640KB", 640_Kibi},    //
-        {"640 KB", 640_Kibi},   //
-        {"750 MB", 750_Mebi},   //
-        {"400GB", 400_Gibi},    //
-        {"2TB", 2_Tebi},        //
-        {".5TB", 1_Tebi / 2},   //
-        {"0.5 TB", 1_Tebi / 2}  //
+        {"128", 128},          //
+        {"128B", 128},         //
+        {"128.32", 128},       // Bytes are indivisible
+        {"128.32B", 128},      // Bytes are indivisible
+        {"180", 180},          //
+        {"640KB", 640_Kibi},   //
+        {"640 KB", 640_Kibi},  //
+        {"750 MB", 750_Mebi},  //
+        {"400GB", 400_Gibi},   //
+        {"2TB", 2_Tebi},       //
+        {".5TB", 512_Gibi},    //
+        {"0.5 TB", 512_Gibi}   //
     };
 
     for (const auto& [input, expected] : tests) {

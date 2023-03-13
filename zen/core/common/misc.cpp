@@ -5,6 +5,7 @@
    file COPYING or http://www.opensource.org/licenses/mit-license.php.
 */
 
+#include <array>
 #include <random>
 #include <regex>
 
@@ -55,49 +56,47 @@ tl::expected<uint64_t, DecodingError> parse_human_bytes(const std::string& input
 
     auto value{std::strtoull(whole_part.c_str(), nullptr, 10)};
     value *= multiplier;
-    if (!fract_part.empty()) {
-        // Use literals, so we don't deal with floats and doubles
-        auto base{"1" + std::string(fract_part.size(), '0')};
-        auto b{std::strtoul(base.c_str(), nullptr, 10)};
-        auto d{std::strtoul(fract_part.c_str(), nullptr, 10)};
-        value += multiplier * d / b;
+    if (multiplier > 1 && !fract_part.empty()) {
+        uint32_t base{10};
+        for (size_t i{1}; i < fract_part.size() /* up to this decimal places */; ++i) {
+            base *= 10;
+        }
+        const auto fract{std::strtoul(fract_part.c_str(), nullptr, 10)};
+        value += multiplier * fract / base;
     }
     return value;
 }
 
 std::string to_human_bytes(const size_t input) {
-    static const char* suffix[]{"B", "KB", "MB", "GB", "TB"};
-    static const uint32_t items{sizeof(suffix) / sizeof(suffix[0])};
+    static const std::array<const char*, 5> suffixes{"B", "KB", "MB", "GB", "TB"};
+    if (input >= static_cast<size_t>(std::numeric_limits<double>::max())) [[unlikely]] {
+        return "NaN";
+    }
+
     uint32_t index{0};
     double value{static_cast<double>(input)};
-    while (value >= kKibi) {
+    while (value >= kKibi && index < suffixes.size()) {
         value /= kKibi;
-        if (++index == (items - 1)) {
-            break;
-        }
+        ++index;
     }
 
     // TODO(C++20/23) Replace with std::format when widely available on GCC and Clang
     std::string formatter{index ? "%.02f %s" : "%.0f %s"};
-    return boost::str(boost::format(formatter) % value % suffix[index]);
+    return boost::str(boost::format(formatter) % value % suffixes[index]);
 }
 
 std::string get_random_alpha_string(size_t length) {
-    static constexpr char kAlphaNum[]{
+    static constexpr std::string_view kAlphaNum{
         "0123456789"
         "abcdefghijklmnopqrstuvwxyz"};
 
-    static constexpr size_t kNumberOfCharacters{sizeof(kAlphaNum) - 1};  // don't count the null terminator
-
     std::random_device rd;
     std::default_random_engine engine{rd()};
+    std::uniform_int_distribution<size_t> uniform_dist{0, kAlphaNum.size() - 1};
 
-    // yield random numbers up to and including kNumberOfCharacters - 1
-    std::uniform_int_distribution<size_t> uniform_dist{0, kNumberOfCharacters - 1};
-
-    std::string ret(length, '\0');
+    std::string ret(length, '0');
     for (size_t i{0}; i < length; ++i) {
-        size_t random_number{uniform_dist(engine)};
+        const size_t random_number{uniform_dist(engine)};
         ret[i] = kAlphaNum[random_number];
     }
 
