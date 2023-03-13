@@ -21,7 +21,7 @@ TEST_CASE("Secure Bytes", "[memory]") {
         CHECK_FALSE(LockedPagesManager::instance().empty());
     }
     CHECK(LockedPagesManager::instance().empty());
-    CHECK_FALSE(LockedPagesManager::instance().contains(ptr));
+    CHECK_FALSE(LockedPagesManager::instance().contains(static_cast<size_t>(ptr)));
     uint8_t* data = reinterpret_cast<uint8_t*>(ptr);
     CHECK((data[0] != 'a' && data[1] != 'b' && data[2] != 'c'));
 }
