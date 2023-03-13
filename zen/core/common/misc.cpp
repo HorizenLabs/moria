@@ -69,10 +69,6 @@ tl::expected<uint64_t, DecodingError> parse_human_bytes(const std::string& input
 
 std::string to_human_bytes(const size_t input) {
     static const std::array<const char*, 5> suffixes{"B", "KB", "MB", "GB", "TB"};
-    if (input >= static_cast<size_t>(std::numeric_limits<double>::max())) [[unlikely]] {
-        return "NaN";
-    }
-
     uint32_t index{0};
     double value{static_cast<double>(input)};
     while (value >= kKibi && index < suffixes.size()) {
