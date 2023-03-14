@@ -39,6 +39,8 @@ bool DataStream::eof() const noexcept { return read_position_ >= buffer_.size();
 
 DataStream::size_type DataStream::tellp() const noexcept { return read_position_; }
 
+void DataStream::seekp(size_type p) noexcept { read_position_ = std::min(p, buffer_.size()); }
+
 std::string DataStream::to_string() const { return zen::hex::encode({buffer_.data(), buffer_.size()}, false); }
 
 void DataStream::shrink() {

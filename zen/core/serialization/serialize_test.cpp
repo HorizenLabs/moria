@@ -6,6 +6,7 @@
 
 #include <catch2/catch.hpp>
 
+#include <zen/core/crypto/sha_2_256.hpp>
 #include <zen/core/encoding/hex.hpp>
 #include <zen/core/serialization/serialize.hpp>
 #include <zen/core/serialization/stream.hpp>
@@ -67,6 +68,51 @@ TEST_CASE("Serialization of base types", "[serialization]") {
         DataStream stream(Scope::kStorage, 0);
         write_data(stream, f64v);
         CHECK(stream.to_string() == "000000c08bf57241");
+
+        stream.clear();
+        for (int i{0}; i < 1000; ++i) {
+            write_data(stream, double(i));
+        }
+
+        // Get Double SHA256 bitcoin like style
+        crypto::Sha256 hasher;
+        hasher.update(*stream.read(stream.avail()));
+        auto hash{hasher.finalize()};
+        hasher.init();
+        hasher.update(hash);
+        hash.assign(hasher.finalize());
+        auto hexed_hash{hex::encode(hash)};
+        // Same as bitcoin tests but with the hex reversed as uint256S uses base_blob<BITS>::SetHex which processes
+        // the string from the bottom
+        CHECK(hexed_hash == hex::reverse_hex("43d0c82591953c4eafe114590d392676a01585d25b25d433557f0d7878b23f96"));
+
+        stream.seekp(0);
+        for (int i{0}; i < 1000; ++i) {
+            const auto returned_value{read_data<double>(stream)};
+            REQUIRE(returned_value);
+            CHECK(*returned_value == double(i));
+        }
+
+        stream.clear();
+        for (int i{0}; i < 1000; ++i) {
+            write_data(stream, float(i));
+        }
+
+        hasher.init();
+        hasher.update(*stream.read(stream.avail()));
+        hash.assign(hasher.finalize());
+        hasher.init();
+        hasher.update(hash);
+        hash.assign(hasher.finalize());
+        hexed_hash.assign(hex::encode(hash));
+        CHECK(hexed_hash == hex::reverse_hex("8e8b4cf3e4df8b332057e3e23af42ebc663b61e0495d5e7e32d85099d7f3fe0c"));
+
+        stream.seekp(0);
+        for (int i{0}; i < 1000; ++i) {
+            const auto returned_value{read_data<float>(stream)};
+            REQUIRE(returned_value);
+            CHECK(*returned_value == float(i));
+        }
     }
 
     SECTION("Write compact") {

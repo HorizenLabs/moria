@@ -103,7 +103,7 @@ inline void write_compact(Stream& s, uint64_t obj) {
 
 //! \brief Lowest level deserialization for integral arithmetic types
 template <typename T, class Stream>
-requires std::is_integral_v<T>
+requires std::is_arithmetic_v<T>
 inline tl::expected<T, DeserializationError> read_data(Stream& s) {
     T ret{0};
     const uint32_t count{ser_sizeof(ret)};
@@ -113,6 +113,12 @@ inline tl::expected<T, DeserializationError> read_data(Stream& s) {
     s.shrink();  // Remove consumed data
     return ret;
 }
+
+// template<typename T, class Stream> requires std::is_same_v<T, double>
+// inline tl::expected<T, DeserializationError> read_data(Stream& s) {
+//     auto u64 = read_data<uint64_t>(s);
+//     return std::bit_cast<T>(u64);
+// }
 
 //! \brief Lowest level deserialization for compact integer
 template <class Stream>

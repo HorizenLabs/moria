@@ -58,6 +58,9 @@ class DataStream {
     //! \brief Returns the current read position
     [[nodiscard]] size_type tellp() const noexcept;
 
+    //! \brief Moves to read position
+    void seekp(size_type p) noexcept;
+
     //! \brief Removes the portion of already consumed data (up to read pos)
     void shrink();
 
