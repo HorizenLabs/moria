@@ -4,12 +4,14 @@
    file COPYING or http://www.opensource.org/licenses/mit-license.php.
 */
 
+#include <iostream>
 #include <vector>
 
 #include <catch2/catch.hpp>
 
 #include <zen/core/common/base.hpp>
 #include <zen/core/common/memory.hpp>
+#include <zen/core/common/misc.hpp>
 
 namespace zen {
 
@@ -24,6 +26,7 @@ TEST_CASE("System Memory", "[memory]") {
     size_t sys_page_size{get_system_page_size()};
     REQUIRE(sys_page_size > 0);
     REQUIRE((sys_page_size & (sys_page_size - 1)) == 0);  // Must be power of 2
+    std::cout << "Using " << zen::to_human_bytes(sys_page_size) << " memory pages" << std::endl;
 }
 
 static const void* last_lock_addr{nullptr};
