@@ -42,7 +42,7 @@ TEST_CASE("Hmac test vectors", "[crypto]") {
             "9b09ffa71b942fcb27635fbcd5b0e944bfdc63644f0713938a7f51535c3a35e2",  // Test 7
         };
 
-        static Hmac256 hasher;
+        Hmac256 hasher;
         run_hasher_tests(hasher, inputs, digests);
     }
 
@@ -63,7 +63,7 @@ TEST_CASE("Hmac test vectors", "[crypto]") {
             "b6022cac3c4982b10d5eeb55c3e4de15134676fb6de0446065c97440fa8c6a58",  // Test 7
         };
 
-        static Hmac512 hasher;
+        Hmac512 hasher;
         run_hasher_tests(hasher, inputs, digests);
     }
 }
