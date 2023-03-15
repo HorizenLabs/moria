@@ -10,26 +10,16 @@
 #pragma once
 #include <zen/core/common/base.hpp>
 #include <zen/core/types/hash.hpp>
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/archive/text_oarchive.hpp>
 
 namespace zen {
 
 struct BlockHeader {
-    friend class boost::serialization::access;
     int32_t version;
     h256 parent_hash;
     h256 merkle_root;
     h256 sidechains_commitment_root;
     uint32_t time;
     uint32_t bits;
-
-    template <class Archive>
-    void serialize(Archive& ar, const unsigned int ver) {
-        ar & version;
-        ar & time;
-        ar & bits;
-    }
 };
 
 }  // namespace zen

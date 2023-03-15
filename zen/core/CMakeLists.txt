@@ -7,7 +7,6 @@
 ]]
 
 message(CHECK_START "Looking for required packages ...")
-find_package(Boost CONFIG REQUIRED COMPONENTS serialization)
 find_package(Microsoft.GSL CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
 find_package(OpenSSL REQUIRED)
@@ -30,7 +29,7 @@ else ()
     target_compile_options(zen_core PRIVATE -fno-exceptions)
 endif ()
 
-set(ZEN_CORE_PUBLIC_LIBS intx::intx Microsoft.GSL::GSL nlohmann_json OpenSSL::Crypto Boost::serialization)
+set(ZEN_CORE_PUBLIC_LIBS intx::intx Microsoft.GSL::GSL nlohmann_json OpenSSL::Crypto)
 set(ZEN_CORE_PRIVATE_LIBS "")
 
 if(MSVC)
