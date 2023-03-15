@@ -18,14 +18,14 @@ namespace zen {
 struct BlockHeader {
     friend class boost::serialization::access;
     int32_t version;
-    H160 parent_hash;
-    H160 merkle_root;
-    H160 sidechains_commitment_root;
+    h256 parent_hash;
+    h256 merkle_root;
+    h256 sidechains_commitment_root;
     uint32_t time;
     uint32_t bits;
 
     template <class Archive>
-    void serialize(Archive& ar, const unsigned int version) {
+    void serialize(Archive& ar, const unsigned int ver) {
         ar & version;
         ar & time;
         ar & bits;

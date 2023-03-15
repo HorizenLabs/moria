@@ -69,6 +69,7 @@ class Hash {
     alignas(uint32_t) std::array<uint8_t, kSize> bytes_{0};
 };
 
-using H160 = Hash<160>;
+using h160 = Hash<160>;
+using h256 = Hash<256>;
 
 }  // namespace zen
