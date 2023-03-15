@@ -33,8 +33,10 @@ class Hasher : private boost::noncopyable {
     [[nodiscard]] constexpr size_t digest_size() const { return digest_size_; };
     [[nodiscard]] constexpr size_t block_size() const { return block_size_; };
 
-    void update(ByteView data) noexcept;
-    void update(std::string_view data) noexcept;
+    virtual void init() noexcept = 0;
+    void reset() noexcept { init(); }  // Alias
+    virtual void update(ByteView data) noexcept;
+    virtual void update(std::string_view data) noexcept;
     [[nodiscard]] virtual Bytes finalize() noexcept = 0;
 
   private:

@@ -48,5 +48,4 @@ struct secure_allocator : public std::allocator<T>, private boost::noncopyable {
 
 //! \brief This is exactly like Bytes, but with a custom locked and secure allocator.
 using SecureBytes = std::basic_string<uint8_t, std::char_traits<uint8_t>, secure_allocator<uint8_t>>;
-
 }  // namespace zen

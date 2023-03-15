@@ -36,8 +36,6 @@ template <class T>
 concept UnsignedIntegral = std::unsigned_integral<T> || std::same_as<T, intx::uint128> ||
     std::same_as<T, intx::uint256> || std::same_as<T, intx::uint512>;
 
-inline constexpr size_t kHashLength{32};  // Length (in bytes) of a hash
-
 using Bytes = std::basic_string<uint8_t>;
 
 class ByteView : public std::basic_string_view<uint8_t> {

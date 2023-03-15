@@ -7,6 +7,8 @@
 */
 
 #pragma once
+#include <functional>
+
 #include <tl/expected.hpp>
 
 #include <zen/core/common/base.hpp>
@@ -17,12 +19,21 @@ namespace zen::ser {
 
 class DataStream {
   public:
+    using reference_type = typename SecureBytes::reference;
     using size_type = typename SecureBytes::size_type;
+    using value_type = typename SecureBytes::value_type;
+    using iterator_type = typename SecureBytes::iterator;
 
     DataStream(Scope scope, int version) : scope_{scope}, version_{version} {};
 
     [[nodiscard]] Scope scope() const noexcept;
     [[nodiscard]] int version() const noexcept;
+
+    //! \brief Reserves capacity
+    void reserve(size_type count);
+
+    //! \brief Reserves capacity
+    void resize(size_type new_size, value_type item = 0);
 
     //! \brief Appends provided data to internal buffer
     void write(ByteView data);
@@ -30,8 +41,20 @@ class DataStream {
     //! \brief Appends provided data to internal buffer
     void write(uint8_t* ptr, size_type count);
 
+    //! \brief Returns an iterator to beginning of the unconsumed part of data
+    iterator_type begin();
+
+    //! \brief Returns an iterator to end of the unconsumed part of data
+    iterator_type end();
+
     //! \brief Appends a single byte to internal buffer
-    void push_back(uint8_t byte);
+    void push_back(value_type item);
+
+    //! \brief Inserts new element at specified position
+    void insert(iterator_type where, value_type item);
+
+    //! \brief Erase an element from specified position
+    void erase(iterator_type where);
 
     //! \brief Returns a view of requested bytes count from the actual read position
     //! \remarks After the view is returned the read position is advanced by count
@@ -45,6 +68,9 @@ class DataStream {
     //! \brief Whether the end of stream's data has been reached
     [[nodiscard]] bool eof() const noexcept;
 
+    //! \brief Accesses one element of the buffer
+    constexpr reference_type operator[](size_type pos) { return buffer_[pos + read_position_]; }
+
     //! \brief Returns the size of the contained data
     [[nodiscard]] size_type size() const noexcept;
 
@@ -54,6 +80,9 @@ class DataStream {
     //! \brief Clears data and moves the read position to the beginning
     //! \remarks After this operation eof() == true
     void clear() noexcept;
+
+    //! \brief Copies unconsumed data into dest and clears
+    void get_clear(DataStream& dst);
 
     //! \brief Returns the current read position
     [[nodiscard]] size_type tellp() const noexcept;

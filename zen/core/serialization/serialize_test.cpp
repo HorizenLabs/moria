@@ -27,13 +27,89 @@ TEST_CASE("Serialization Sizes", "[serialization]") {
     CHECK(ser_sizeof(double{0}) == 8);
     CHECK(ser_sizeof(bool{true}) == 1);
 
+    CHECK(sizeof(uint32_t) == sizeof(float));
+    CHECK(sizeof(uint64_t) == sizeof(double));
+
     // Compact integral
-    CHECK(ser_csizeof(0x00) == 1);
-    CHECK(ser_csizeof(0xfffa) == 3);
-    CHECK(ser_csizeof(256) == 3);
-    CHECK(ser_csizeof(0x10003) == 5);
-    CHECK(ser_csizeof(0xffffffff) == 5);
-    CHECK(ser_csizeof(UINT64_MAX) == 9);
+    CHECK(ser_compact_sizeof(0x00) == 1);
+    CHECK(ser_compact_sizeof(0xfffa) == 3);
+    CHECK(ser_compact_sizeof(256) == 3);
+    CHECK(ser_compact_sizeof(0x10003) == 5);
+    CHECK(ser_compact_sizeof(0xffffffff) == 5);
+    CHECK(ser_compact_sizeof(UINT64_MAX) == 9);
+}
+
+TEST_CASE("Float conversions", "[serialization]") {
+    SECTION("Floats") {
+        std::vector<std::pair<uint32_t, float>> tests{{0x00, 0.0F},       {0x3f000000, 0.5F},
+                                                      {0x3f800000, 1.0F}, {0x40000000, 2.0F},
+                                                      {0x40800000, 4.0F}, {0x44444444, 785.066650390625F}};
+
+        for (const auto [u32, f32] : tests) {
+            CHECK(std::bit_cast<float>(u32) == f32);
+            CHECK(std::bit_cast<uint32_t>(f32) == u32);
+        }
+    }
+
+    SECTION("Doubles") {
+        std::vector<std::pair<uint64_t, double>> tests{
+            {0x0000000000000000ULL, 0.0}, {0x3fe0000000000000ULL, 0.5},  {0x3ff0000000000000ULL, 1.0},
+            {0x4000000000000000ULL, 2.0}, {0x4010000000000000ULL, 4.0F}, {0x4088888880000000ULL, 785.066650390625}};
+
+        for (const auto [u64, f64] : tests) {
+            CHECK(std::bit_cast<double>(u64) == f64);
+            CHECK(std::bit_cast<uint64_t>(f64) == u64);
+        }
+    }
+}
+
+TEST_CASE("Serialization stream", "[serialization]") {
+    DataStream stream(Scope::kStorage, 0);
+    CHECK(stream.eof());
+
+    Bytes data{0x00, 0x01, 0x02, 0xff};
+    stream.write(data);
+    CHECK(stream.size() == data.size());
+    CHECK(stream.avail() == data.size());
+
+    // Inserting at beginning/end/middle:
+
+    uint8_t c{0x11};
+    stream.insert(stream.begin(), c);
+    CHECK(stream.size() == data.size() + 1);
+    CHECK(stream[0] == c);
+    CHECK(stream[1] == 0);
+
+    stream.insert(stream.end(), c);
+    CHECK(stream.size() == data.size() + 2);
+    CHECK(stream[4] == 0xff);
+    CHECK(stream[5] == c);
+
+    stream.insert(stream.begin() + 2, c);
+    CHECK(stream.size() == data.size() + 3);
+    CHECK(stream[2] == c);
+
+    // Delete at beginning/end/middle
+
+    stream.erase(stream.begin());
+    CHECK(stream.size() == data.size() + 2);
+    CHECK(stream[0] == 0);
+
+    stream.erase(stream.begin() + stream.size() - 1);
+    CHECK(stream.size() == data.size() + 1);
+    CHECK(stream[4] == 0xff);
+
+    stream.erase(stream.begin() + 1);
+    CHECK(stream.size() == data.size());
+    CHECK(stream[0] == 0);
+    CHECK(stream[1] == 1);
+    CHECK(stream[2] == 2);
+    CHECK(stream[3] == 0xff);
+
+    DataStream dst(Scope::kStorage, 0);
+    stream.get_clear(dst);
+    CHECK(stream.eof());
+    CHECK(dst.avail() == data.size());
 }
 
 TEST_CASE("Serialization of base types", "[serialization]") {

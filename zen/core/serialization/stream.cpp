@@ -15,9 +15,25 @@ Scope DataStream::scope() const noexcept { return scope_; }
 
 int DataStream::version() const noexcept { return version_; }
 
+void DataStream::reserve(size_type count) { buffer_.reserve(count); }
+
+void DataStream::resize(size_type new_size, value_type item) { buffer_.resize(new_size, item); }
+
 void DataStream::write(ByteView data) { buffer_.append(data); }
 
 void DataStream::write(uint8_t* ptr, DataStream::size_type count) { write({ptr, count}); }
+
+DataStream::iterator_type DataStream::begin() {
+    auto ret{buffer_.begin()};
+    std::advance(ret, read_position_);
+    return ret;
+}
+
+DataStream::iterator_type DataStream::end() { return buffer_.end() + read_position_; }
+
+void DataStream::insert(iterator_type where, value_type item) { buffer_.insert(where, item); }
+
+void DataStream::erase(iterator_type where) { buffer_.erase(where); }
 
 void DataStream::push_back(uint8_t byte) { buffer_.push_back(byte); }
 
@@ -57,4 +73,8 @@ void DataStream::clear() noexcept {
     read_position_ = 0;
 }
 
+void DataStream::get_clear(DataStream& dst) {
+    dst.write({&buffer_[read_position_], avail()});
+    clear();
+}
 }  // namespace zen::ser

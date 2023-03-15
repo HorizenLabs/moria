@@ -18,7 +18,7 @@ class Sha512 : public Hasher {
     explicit Sha512(ByteView initial_data);
     explicit Sha512(std::string_view initial_data);
 
-    void init() noexcept;
+    void init() noexcept override;
     [[nodiscard]] Bytes finalize() noexcept override;
     [[nodiscard]] Bytes finalize_nopadding(bool compression) const noexcept;
 

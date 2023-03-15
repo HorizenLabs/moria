@@ -18,7 +18,7 @@ class Ripemd160 : public Hasher {
     explicit Ripemd160(ByteView initial_data);
     explicit Ripemd160(std::string_view initial_data);
 
-    void init() noexcept;
+    void init() noexcept override;
     [[nodiscard]] Bytes finalize() noexcept override;
 
   private:

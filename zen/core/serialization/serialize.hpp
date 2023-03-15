@@ -33,15 +33,14 @@ inline uint32_t ser_sizeof(bool) {
 //! \brief Returns the serialzed size of a compacted integral
 //! \remarks Mostly used in P2P messages to prepend a list of elements with the count of elements.
 //! Not to be confused with varint which is used in storage serialization
-inline uint32_t ser_csizeof(uint64_t value) {
+inline uint32_t ser_compact_sizeof(uint64_t value) {
     if (value < 253)
-        return 1;
+        return 1;  // One byte only
     else if (value <= 0xffff)
-        return 3;
+        return 3;  // One byte prefix + 2 bytes of uint16_t
     else if (value <= 0xffffffff)
-        return 5;
-
-    return 9;
+        return 5;  // One byte prefix + 4 bytes of uint32_t
+    return 9;      // One byte prefix + 8 bytes of uint64_t
 }
 
 //! \brief Lowest level serialization for integral arithmetic types
@@ -73,7 +72,7 @@ inline void write_data(Stream& s, double obj) {
 //! \brief Lowest level serialization for compact integer
 template <class Stream>
 inline void write_compact(Stream& s, uint64_t obj) {
-    auto size{ser_csizeof(obj)};
+    auto size{ser_compact_sizeof(obj)};
 
     union caster_t {
         uint64_t u64;
@@ -101,7 +100,7 @@ inline void write_compact(Stream& s, uint64_t obj) {
     }
 }
 
-//! \brief Lowest level deserialization for integral arithmetic types
+//! \brief Lowest level deserialization for arithmetic types
 template <typename T, class Stream>
 requires std::is_arithmetic_v<T>
 inline tl::expected<T, DeserializationError> read_data(Stream& s) {
@@ -113,12 +112,6 @@ inline tl::expected<T, DeserializationError> read_data(Stream& s) {
     s.shrink();  // Remove consumed data
     return ret;
 }
-
-// template<typename T, class Stream> requires std::is_same_v<T, double>
-// inline tl::expected<T, DeserializationError> read_data(Stream& s) {
-//     auto u64 = read_data<uint64_t>(s);
-//     return std::bit_cast<T>(u64);
-// }
 
 //! \brief Lowest level deserialization for compact integer
 template <class Stream>

@@ -18,7 +18,7 @@ class Sha256 : public Hasher {
     explicit Sha256(ByteView initial_data);
     explicit Sha256(std::string_view initial_data);
 
-    void init() noexcept;
+    void init() noexcept override;
     [[nodiscard]] Bytes finalize() noexcept override;
     [[nodiscard]] Bytes finalize_nopadding(bool compression) const noexcept;
 

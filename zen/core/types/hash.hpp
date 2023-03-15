@@ -13,8 +13,17 @@
 #include <zen/core/encoding/hex.hpp>
 
 namespace zen {
+template <uint32_t BITS>
 class Hash {
   public:
+    static_assert(BITS >= 8 && BITS % 8 == 0, "Must be a multiple of 8");
+    enum : uint32_t {
+        kSize = BITS / 8
+    };
+
+    using iterator_type = typename std::array<uint8_t, kSize>::iterator;
+    using const_iterator_type = typename std::array<uint8_t, kSize>::const_iterator;
+
     Hash() = default;
 
     //! \brief Creates a Hash from given input
@@ -32,8 +41,22 @@ class Hash {
     //! \brief Returns the hexadecimal representation of this hash
     [[nodiscard]] std::string to_hex(bool with_prefix = false) const noexcept;
 
+    //! \brief An alias for to_hex with no prefix
+    [[nodiscard]] std::string to_string() const noexcept { return to_hex(false); }
+
     //! \brief The size of a Hash
-    static constexpr size_t size() { return kHashLength; }
+    static constexpr size_t size() { return kSize; }
+
+    //! \brief Returns the hash to its pristine state (i.e. all zeroes)
+    void reset() { memset(&bytes_, 0, kSize); }
+
+    iterator_type begin() { return bytes_.begin(); }
+
+    iterator_type end() { return bytes_.end(); }
+
+    const_iterator_type cbegin() {return bytes_.cbegin(); }
+
+    const_iterator_type cend() {return bytes_.cend(); }
 
     inline uint8_t operator[](size_t index) const { return bytes_.at(index); }
     auto operator<=>(const Hash&) const = default;
@@ -43,6 +66,9 @@ class Hash {
     }
 
   private:
-    std::array<uint8_t, kHashLength> bytes_{0};
+    alignas(uint32_t) std::array<uint8_t, kSize> bytes_{0};
 };
+
+using H160 = Hash<160>;
+
 }  // namespace zen
