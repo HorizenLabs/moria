@@ -29,7 +29,7 @@ DataStream::iterator_type DataStream::begin() {
     return ret;
 }
 
-DataStream::iterator_type DataStream::end() { return buffer_.end() + read_position_; }
+DataStream::iterator_type DataStream::end() { return buffer_.end(); }
 
 void DataStream::insert(iterator_type where, value_type item) { buffer_.insert(where, item); }
 
