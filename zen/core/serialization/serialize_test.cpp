@@ -45,7 +45,7 @@ TEST_CASE("Float conversions", "[serialization]") {
                                                       {0x3f800000, 1.0F}, {0x40000000, 2.0F},
                                                       {0x40800000, 4.0F}, {0x44444444, 785.066650390625F}};
 
-        for (const auto [u32, f32] : tests) {
+        for (const auto& [u32, f32] : tests) {
             CHECK(std::bit_cast<float>(u32) == f32);
             CHECK(std::bit_cast<uint32_t>(f32) == u32);
         }
@@ -56,7 +56,7 @@ TEST_CASE("Float conversions", "[serialization]") {
             {0x0000000000000000ULL, 0.0}, {0x3fe0000000000000ULL, 0.5},  {0x3ff0000000000000ULL, 1.0},
             {0x4000000000000000ULL, 2.0}, {0x4010000000000000ULL, 4.0F}, {0x4088888880000000ULL, 785.066650390625}};
 
-        for (const auto [u64, f64] : tests) {
+        for (const auto& [u64, f64] : tests) {
             CHECK(std::bit_cast<double>(u64) == f64);
             CHECK(std::bit_cast<uint64_t>(f64) == u64);
         }
@@ -95,7 +95,7 @@ TEST_CASE("Serialization stream", "[serialization]") {
     CHECK(stream.size() == data.size() + 2);
     CHECK(stream[0] == 0);
 
-    stream.erase(stream.begin() + stream.size() - 1);
+    stream.erase(stream.begin() + static_cast<DataStream::difference_type>(stream.size()) - 1);
     CHECK(stream.size() == data.size() + 1);
     CHECK(stream[4] == 0xff);
 

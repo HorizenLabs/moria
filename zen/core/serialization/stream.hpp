@@ -21,6 +21,7 @@ class DataStream {
   public:
     using reference_type = typename SecureBytes::reference;
     using size_type = typename SecureBytes::size_type;
+    using difference_type = typename SecureBytes::difference_type;
     using value_type = typename SecureBytes::value_type;
     using iterator_type = typename SecureBytes::iterator;
 
