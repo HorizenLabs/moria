@@ -13,7 +13,7 @@ namespace zen {
 TEST_CASE("Secure Bytes", "[memory]") {
     intptr_t ptr{0};
     {
-        SecureBytes secure_bytes(4_Kibi, '\0');
+        SecureBytes secure_bytes(4_KiB, '\0');
         ptr = reinterpret_cast<intptr_t>(&secure_bytes);
         secure_bytes[0] = 'a';
         secure_bytes[1] = 'b';

@@ -22,11 +22,11 @@ namespace zen {
 //! \brief Parses a string input value representing a size in human-readable format with qualifiers. eg "256MB"
 [[nodiscard]] tl::expected<uint64_t, DecodingError> parse_human_bytes(const std::string& input);
 
-//! \brief Transforms a size value into it's decimal string representation with binary suffix
+//! \brief Transforms a size value into it's decimal string representation with suffix (optional binary)
 //! \see https://en.wikipedia.org/wiki/Binary_prefix
-std::string to_human_bytes(size_t input);
+[[nodiscard]] std::string to_human_bytes(size_t input, bool binary = false);
 
 //! \brief Builds a randomized string of alpha num chars (lowercase) of arbitrary length
-std::string get_random_alpha_string(size_t length);
+[[nodiscard]] std::string get_random_alpha_string(size_t length);
 
 }  // namespace zen

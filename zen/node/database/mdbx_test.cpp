@@ -51,14 +51,14 @@ TEST_CASE("Database Environment", "[database]") {
         {
             db::EnvConfig db_config{tmp_dir.path().string(), /*create*/ true};
             db_config.inmemory = true;
-            db_config.page_size = 4_Kibi;
+            db_config.page_size = 4_KiB;
             REQUIRE_NOTHROW((void)db::open_env(db_config));
         }
 
         // Try re-open same db with different page size
         db::EnvConfig db_config{tmp_dir.path().string(), /*create*/ false};
         db_config.inmemory = true;
-        db_config.page_size = 16_Kibi;
+        db_config.page_size = 16_KiB;
         REQUIRE_THROWS((void)db::open_env(db_config));
     }
 }

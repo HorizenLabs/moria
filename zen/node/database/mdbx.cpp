@@ -111,8 +111,8 @@ static inline mdbx::cursor::move_operation move_operation(CursorMoveDirection di
 
     ::mdbx::env_managed::create_parameters cp{};  // Default create parameters
     if (!config.shared) {
-        auto max_map_size = static_cast<intptr_t>(config.inmemory ? 128_Mebi : config.max_size);
-        auto growth_size = static_cast<intptr_t>(config.inmemory ? 8_Mebi : config.growth_size);
+        auto max_map_size = static_cast<intptr_t>(config.inmemory ? 128_MiB : config.max_size);
+        auto growth_size = static_cast<intptr_t>(config.inmemory ? 8_MiB : config.growth_size);
         cp.geometry.make_dynamic(::mdbx::env::geometry::default_value, max_map_size);
         cp.geometry.growth_step = growth_size;
         if (!db_ondisk_file_size) cp.geometry.pagesize = static_cast<intptr_t>(config.page_size);
@@ -136,10 +136,10 @@ static inline mdbx::cursor::move_operation move_operation(CursorMoveDirection di
 
     if (!config.shared) {
         // C++ bindings don't have setoptions
-        ::mdbx::error::success_or_throw(::mdbx_env_set_option(ret, MDBX_opt_rp_augment_limit, 32_Mebi));
+        ::mdbx::error::success_or_throw(::mdbx_env_set_option(ret, MDBX_opt_rp_augment_limit, 32_MiB));
         if (!config.readonly) {
-            ::mdbx::error::success_or_throw(::mdbx_env_set_option(ret, MDBX_opt_txn_dp_initial, 16_Kibi));
-            ::mdbx::error::success_or_throw(::mdbx_env_set_option(ret, MDBX_opt_dp_reserve_limit, 16_Kibi));
+            ::mdbx::error::success_or_throw(::mdbx_env_set_option(ret, MDBX_opt_txn_dp_initial, 16_KiB));
+            ::mdbx::error::success_or_throw(::mdbx_env_set_option(ret, MDBX_opt_dp_reserve_limit, 16_KiB));
 
             uint64_t dirty_pages_limit{0};
             ::mdbx::error::success_or_throw(::mdbx_env_get_option(ret, MDBX_opt_txn_dp_limit, &dirty_pages_limit));
@@ -148,7 +148,7 @@ static inline mdbx::cursor::move_operation move_operation(CursorMoveDirection di
             // must be in the range from 12.5% (almost empty) to 50% (half empty)
             // which corresponds to the range from 8192 and to 32768 in units respectively
             ::mdbx::error::success_or_throw(
-                ::mdbx_env_set_option(ret, MDBX_opt_merge_threshold_16dot16_percent, 32_Kibi));
+                ::mdbx_env_set_option(ret, MDBX_opt_merge_threshold_16dot16_percent, 32_KiB));
         }
     }
     if (!config.inmemory) {

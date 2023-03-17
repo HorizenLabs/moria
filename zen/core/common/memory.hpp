@@ -38,8 +38,8 @@ class LockedPagesManagerBase : private boost::noncopyable {
     LockedPagesManagerBase() : LockedPagesManagerBase(get_system_page_size()){};
 
     explicit LockedPagesManagerBase(size_t page_size) : page_size_{page_size} {
-        ZEN_ASSERT((page_size >= 512 && page_size <= 1_Gibi));  // Martian values
-        ZEN_ASSERT((page_size & (page_size - 1)) == 0);         // Must be power of two
+        ZEN_ASSERT((page_size >= 512 && page_size <= 1_GiB));  // Martian values
+        ZEN_ASSERT((page_size & (page_size - 1)) == 0);        // Must be power of two
         page_mask_ = ~(page_size - 1);
     };
 

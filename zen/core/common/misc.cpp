@@ -29,7 +29,8 @@ tl::expected<uint64_t, DecodingError> parse_human_bytes(const std::string& input
         return 0ULL;
     }
 
-    static const std::regex pattern{R"(^(\d{0,10})(\.\d{1,3})?\ *?(B|KB|MB|GB|TB)?$)", std::regex_constants::icase};
+    static const std::regex pattern{R"(^(\d{0,10})(\.\d{1,3})?\ *?(B|KB|MB|GB|TB|KiB|MiB|GiB|TiB)?$)",
+                                    std::regex_constants::icase};
     std::smatch matches;
     if (!std::regex_search(input, matches, pattern, std::regex_constants::match_default)) {
         return tl::unexpected{DecodingError::kInvalidInput};
@@ -45,13 +46,21 @@ tl::expected<uint64_t, DecodingError> parse_human_bytes(const std::string& input
     }
 
     if (boost::iequals(suffix, "KB")) {
-        multiplier = kKibi;
+        multiplier = kKB;
     } else if (boost::iequals(suffix, "MB")) {
-        multiplier = kMebi;
+        multiplier = kMB;
     } else if (boost::iequals(suffix, "GB")) {
-        multiplier = kGibi;
+        multiplier = kGB;
     } else if (boost::iequals(suffix, "TB")) {
-        multiplier = kTebi;
+        multiplier = kTB;
+    } else if (boost::iequals(suffix, "KiB")) {
+        multiplier = kKiB;
+    } else if (boost::iequals(suffix, "MiB")) {
+        multiplier = kMiB;
+    } else if (boost::iequals(suffix, "GiB")) {
+        multiplier = kGiB;
+    } else if (boost::iequals(suffix, "TiB")) {
+        multiplier = kTiB;
     }
 
     auto value{std::strtoull(whole_part.c_str(), nullptr, 10)};
@@ -67,18 +76,20 @@ tl::expected<uint64_t, DecodingError> parse_human_bytes(const std::string& input
     return value;
 }
 
-std::string to_human_bytes(const size_t input) {
-    static const std::array<const char*, 5> suffixes{"B", "KB", "MB", "GB", "TB"};
+std::string to_human_bytes(const size_t input, bool binary) {
+    static const std::array<const char*, 5> suffixes{"B", "KB", "MB", "GB", "TB"};             // Must have same ..
+    static const std::array<const char*, 5> binary_suffixes{"B", "KiB", "MiB", "GiB", "TiB"};  // ...number of items
+    const auto divisor{binary ? kKiB : kKB};
     uint32_t index{0};
     double value{static_cast<double>(input)};
-    while (value >= kKibi && index < suffixes.size()) {
-        value /= kKibi;
+    while (value >= divisor && index < suffixes.size()) {
+        value /= divisor;
         ++index;
     }
 
     // TODO(C++20/23) Replace with std::format when widely available on GCC and Clang
     std::string formatter{index ? "%.02f %s" : "%.0f %s"};
-    return boost::str(boost::format(formatter) % value % suffixes[index]);
+    return boost::str(boost::format(formatter) % value % (binary ? binary_suffixes[index] : suffixes[index]));
 }
 
 std::string get_random_alpha_string(size_t length) {

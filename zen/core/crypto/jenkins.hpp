@@ -12,7 +12,6 @@ namespace zen::crypto {
 
 class Jenkins {
   public:
-
     static uint64_t Hash(const uint32_t* source, size_t length, const uint32_t* salt);
 
   private:

@@ -15,7 +15,7 @@
 
 namespace zen {
 
-static constexpr size_t kInputSize{8_Kibi};
+static constexpr size_t kInputSize{8_KiB};
 
 void bench_hex(benchmark::State& state) {
     int bytes_processed{0};

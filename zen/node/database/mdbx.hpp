@@ -139,18 +139,18 @@ using WalkFuncRef = absl::FunctionRef<void(ByteView key, ByteView value)>;
 //! \brief Essential environment settings
 struct EnvConfig {
     std::string path{};
-    bool create{false};          // Whether db file must be created
-    bool readonly{false};        // Whether db should be opened in RO mode
-    bool exclusive{false};       // Whether this process has exclusive access
-    bool inmemory{false};        // Whether this db is in memory
-    bool shared{false};          // Whether this process opens a db already opened by another process
-    bool read_ahead{false};      // Whether to enable mdbx read ahead
-    bool write_map{false};       // Whether to enable mdbx write map
-    size_t page_size{4_Kibi};    // Mdbx page size
-    size_t max_size{3_Tebi};     // Mdbx max map size
-    size_t growth_size{2_Gibi};  // Increment size for each extension
-    uint32_t max_tables{128};    // Default max number of named tables
-    uint32_t max_readers{100};   // Default max number of readers
+    bool create{false};         // Whether db file must be created
+    bool readonly{false};       // Whether db should be opened in RO mode
+    bool exclusive{false};      // Whether this process has exclusive access
+    bool inmemory{false};       // Whether this db is in memory
+    bool shared{false};         // Whether this process opens a db already opened by another process
+    bool read_ahead{false};     // Whether to enable mdbx read ahead
+    bool write_map{false};      // Whether to enable mdbx write map
+    size_t page_size{4_KiB};    // Mdbx page size
+    size_t max_size{3_TiB};     // Mdbx max map size
+    size_t growth_size{2_GiB};  // Increment size for each extension
+    uint32_t max_tables{128};   // Default max number of named tables
+    uint32_t max_readers{100};  // Default max number of readers
 };
 
 //! \brief Configuration settings for a "map" (aka a table)

@@ -33,8 +33,11 @@ namespace zen {
 using BlockNum = uint32_t;
 
 template <class T>
-concept UnsignedIntegral = std::unsigned_integral<T> || std::same_as<T, intx::uint128> ||
-    std::same_as<T, intx::uint256> || std::same_as<T, intx::uint512>;
+concept UnsignedIntegral = std::unsigned_integral<T>;
+
+template <class T>
+concept UnsignedIntegralEx = UnsignedIntegral<T> || std::same_as<T, intx::uint128> || std::same_as<T, intx::uint256> ||
+    std::same_as<T, intx::uint512>;
 
 using Bytes = std::basic_string<uint8_t>;
 
@@ -60,17 +63,29 @@ class ByteView : public std::basic_string_view<uint8_t> {
     [[nodiscard]] bool is_null() const noexcept { return data() == nullptr; }
 };
 
-// https://en.wikipedia.org/wiki/Binary_prefix
+// Sizes base 10
+inline constexpr uint64_t kKB{1'000};        // 10^{3} bytes
+inline constexpr uint64_t kMB{kKB * 1'000};  // 10^{6} bytes
+inline constexpr uint64_t kGB{kMB * 1'000};  // 10^{9} bytes
+inline constexpr uint64_t kTB{kGB * 1'000};  // 10^{12} bytes
 
-inline constexpr uint64_t kKibi{1024};
-inline constexpr uint64_t kMebi{1024 * kKibi};
-inline constexpr uint64_t kGibi{1024 * kMebi};
-inline constexpr uint64_t kTebi{1024 * kGibi};
+// Sizes base 2 https://en.wikipedia.org/wiki/Binary_prefix
+inline constexpr uint64_t kKiB{1024};        // 2^{10} bytes
+inline constexpr uint64_t kMiB{kKiB << 10};  // 2^{20} bytes
+inline constexpr uint64_t kGiB{kMiB << 10};  // 2^{30} bytes
+inline constexpr uint64_t kTiB{kGiB << 10};  // 2^{40} bytes
 
-constexpr uint64_t operator"" _Kibi(unsigned long long x) { return x * kKibi; }
-constexpr uint64_t operator"" _Mebi(unsigned long long x) { return x * kMebi; }
-constexpr uint64_t operator"" _Gibi(unsigned long long x) { return x * kGibi; }
-constexpr uint64_t operator"" _Tebi(unsigned long long x) { return x * kTebi; }
+// Literals for sizes base 10
+constexpr uint64_t operator"" _KB(unsigned long long x) { return x * kKB; }
+constexpr uint64_t operator"" _MB(unsigned long long x) { return x * kMB; }
+constexpr uint64_t operator"" _GB(unsigned long long x) { return x * kGB; }
+constexpr uint64_t operator"" _TB(unsigned long long x) { return x * kTB; }
+
+// Literals for sizes base 2
+constexpr uint64_t operator"" _KiB(unsigned long long x) { return x * kKiB; }
+constexpr uint64_t operator"" _MiB(unsigned long long x) { return x * kMiB; }
+constexpr uint64_t operator"" _GiB(unsigned long long x) { return x * kGiB; }
+constexpr uint64_t operator"" _TiB(unsigned long long x) { return x * kTiB; }
 
 static constexpr int64_t kCoinMaxDecimals = 8;         // Max number of denomination decimals
 static constexpr int64_t kCoin = 100'000'000;          // As many zeroes as kCoinMaxDecimals

@@ -20,10 +20,8 @@ namespace zen::ser {
 //! \remarks Do not define serializable classes members as size_t as it might lead to wrong results on
 //! MacOS/Xcode bundles
 template <class T>
-    requires std::is_arithmetic_v<T>
-inline uint32_t ser_sizeof(T) {
-    return sizeof(T);
-}
+requires std::is_arithmetic_v<T>
+inline uint32_t ser_sizeof(T) { return sizeof(T); }
 
 //! \brief Returns the serialized size of arithmetic types
 //! \remarks Specialization for bool which is stored in at least 1 byte
@@ -46,8 +44,7 @@ uint32_t ser_compact_sizeof(uint64_t value) {
 }
 
 //! \brief Lowest level serialization for integral arithmetic types
-template <class Stream, typename T>
-    requires std::is_integral_v<T>
+template <class Stream, std::integral T>
 inline void write_data(Stream& s, T obj) {
     std::array<unsigned char, sizeof(obj)> bytes{};
     std::memcpy(bytes.data(), &obj, sizeof(obj));
@@ -105,7 +102,7 @@ inline void write_compact(Stream& s, uint64_t obj) {
 
 //! \brief Lowest level deserialization for arithmetic types
 template <typename T, class Stream>
-    requires std::is_arithmetic_v<T>
+requires std::is_arithmetic_v<T>
 inline tl::expected<T, DeserializationError> read_data(Stream& s) {
     T ret{0};
     const uint32_t count{ser_sizeof(ret)};

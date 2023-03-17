@@ -15,7 +15,7 @@
 #include <zen/core/crypto/sha_2_512.hpp>
 
 namespace zen {
-static constexpr size_t kInputSize{4_Kibi};
+static constexpr size_t kInputSize{4_KiB};
 
 void bench_sha1(benchmark::State& state) {
     using namespace zen;

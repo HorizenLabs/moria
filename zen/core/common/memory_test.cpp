@@ -49,7 +49,7 @@ class TestLocker {
 };
 
 TEST_CASE("Page Locker", "[memory]") {
-    const size_t kTestPageSize = 4_Kibi;
+    const size_t kTestPageSize = 4_KiB;
     LockedPagesManagerBase<TestLocker> lpm(kTestPageSize);
     CHECK(lpm.empty());
     size_t address{1};
