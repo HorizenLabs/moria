@@ -102,8 +102,8 @@ if(NOT ZEN_CORE_ONLY)
 
     # MDBX
     set(MDBX_ENABLE_TESTS OFF)
-    set(MDBX_ALLOY_BUILD ON)
-    set(MDBX_BUILD_TIMESTAMP:string unknown) # For reproducible builds
+    set(MDBX_ALLOY_BUILD OFF)
+    set(MDBX_BUILD_TIMESTAMP "unknown") # For reproducible builds
     add_subdirectory(third-party/libmdbx)
     target_include_directories(mdbx-static INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/third-party/libmdbx)
 

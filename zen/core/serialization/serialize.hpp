@@ -20,8 +20,10 @@ namespace zen::ser {
 //! \remarks Do not define serializable classes members as size_t as it might lead to wrong results on
 //! MacOS/Xcode bundles
 template <class T>
-requires std::is_arithmetic_v<T>
-inline uint32_t ser_sizeof(T) { return sizeof(T); }
+    requires std::is_arithmetic_v<T>
+inline uint32_t ser_sizeof(T) {
+    return sizeof(T);
+}
 
 //! \brief Returns the serialized size of arithmetic types
 //! \remarks Specialization for bool which is stored in at least 1 byte
@@ -33,7 +35,7 @@ inline uint32_t ser_sizeof(bool) {
 //! \brief Returns the serialzed size of a compacted integral
 //! \remarks Mostly used in P2P messages to prepend a list of elements with the count of elements.
 //! Not to be confused with varint which is used in storage serialization
-inline uint32_t ser_compact_sizeof(uint64_t value) {
+uint32_t ser_compact_sizeof(uint64_t value) {
     if (value < 253)
         return 1;  // One byte only
     else if (value <= 0xffff)
@@ -45,14 +47,18 @@ inline uint32_t ser_compact_sizeof(uint64_t value) {
 
 //! \brief Lowest level serialization for integral arithmetic types
 template <class Stream, typename T>
-requires std::is_integral_v<T>
-inline void write_data(Stream& s, T obj) { s.write(reinterpret_cast<uint8_t*>(&obj), ser_sizeof(obj)); }
+    requires std::is_integral_v<T>
+inline void write_data(Stream& s, T obj) {
+    std::array<unsigned char, sizeof(obj)> bytes{};
+    std::memcpy(bytes.data(), &obj, sizeof(obj));
+    s.write(bytes.data(), bytes.size());
+}
 
 //! \brief Lowest level serialization for bool
 template <class Stream>
 inline void write_data(Stream& s, bool obj) {
     const uint8_t out{static_cast<uint8_t>(obj ? 0x0 : 0x1)};
-    write_data(s, out);
+    s.push_back(out);
 }
 
 //! \brief Lowest level serialization for float
@@ -72,37 +78,34 @@ inline void write_data(Stream& s, double obj) {
 //! \brief Lowest level serialization for compact integer
 template <class Stream>
 inline void write_compact(Stream& s, uint64_t obj) {
-    auto size{ser_compact_sizeof(obj)};
+    const auto casted{std::bit_cast<std::array<uint8_t, sizeof(obj)>>(obj)};
+    const auto num_bytes{ser_compact_sizeof(obj)};
+    uint8_t prefix{0x00};
 
-    union caster_t {
-        uint64_t u64;
-        std::array<uint32_t, 2> u32;
-        std::array<uint16_t, 4> u16;
-        std::array<uint8_t, 8> u8;
-    };
-
-    const caster_t caster{obj};
-    switch (size) {
+    switch (num_bytes) {
         case 1:
-            write_data(s, caster.u8[0]);
-            break;
+            s.push_back(casted[0]);
+            return;  // Nothing else to append
         case 3:
-            write_data(s, uint8_t{253});
-            write_data(s, caster.u16[0]);
+            prefix = 253;
             break;
         case 5:
-            write_data(s, uint8_t{254});
-            write_data(s, caster.u32[0]);
+            prefix = 254;
+            break;
+        case 9:
+            prefix = 255;
             break;
         default:
-            write_data(s, uint8_t{255});
-            write_data(s, caster.u64);
+            ZEN_ASSERT(false);  // Should not happen - Houston we have a problem
     }
+
+    s.push_back(prefix);
+    s.write(casted.data(), num_bytes - 1);
 }
 
 //! \brief Lowest level deserialization for arithmetic types
 template <typename T, class Stream>
-requires std::is_arithmetic_v<T>
+    requires std::is_arithmetic_v<T>
 inline tl::expected<T, DeserializationError> read_data(Stream& s) {
     T ret{0};
     const uint32_t count{ser_sizeof(ret)};

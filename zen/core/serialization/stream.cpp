@@ -21,7 +21,7 @@ void DataStream::resize(size_type new_size, value_type item) { buffer_.resize(ne
 
 void DataStream::write(ByteView data) { buffer_.append(data); }
 
-void DataStream::write(uint8_t* ptr, DataStream::size_type count) { write({ptr, count}); }
+void DataStream::write(const uint8_t* const ptr, DataStream::size_type count) { write({ptr, count}); }
 
 DataStream::iterator_type DataStream::begin() {
     auto ret{buffer_.begin()};

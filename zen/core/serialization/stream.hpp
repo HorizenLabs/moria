@@ -40,7 +40,7 @@ class DataStream {
     void write(ByteView data);
 
     //! \brief Appends provided data to internal buffer
-    void write(uint8_t* ptr, size_type count);
+    void write(const uint8_t* const ptr, size_type count);
 
     //! \brief Returns an iterator to beginning of the unconsumed part of data
     iterator_type begin();
